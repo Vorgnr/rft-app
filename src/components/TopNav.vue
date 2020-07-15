@@ -9,7 +9,7 @@
             <router-link tag="li" class="nav-item" to="matches">
               <a class="nav-link" href="#">Matchs</a>
             </router-link>
-            <router-link tag="li" class="nav-item" to="players">
+            <router-link tag="li" class="nav-item" to="leaderboard">
               <a class="nav-link" href="#">Joueurs</a>
             </router-link>
             <router-link tag="li" class="nav-item" to="inscription">
