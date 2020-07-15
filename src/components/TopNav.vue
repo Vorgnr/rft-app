@@ -1,20 +1,23 @@
 <template>
-  <div class="uk-navbar-container uk-navbar-transparent top-nav">
-    <nav uk-navbar>
-      <div class="uk-navbar-left uk-light">
-        <div style="padding-left: 40px; padding-right: 35px">
-          <img width="55" height="55" alt="Vue logo" src="../assets/logo.png">
-        </div>
-        <ul class="uk-navbar-nav">
-          <router-link tag="li" to="/matches">
-            <a href="#">Matchs</a>
-          </router-link>
-          <router-link tag="li" to="/players">
-            <a href="#">Joueurs</a>
-          </router-link>
-        </ul>
+  <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+    <div class="container">
+      <div class="navbar-brand">
+        <img width="55" height="55" alt="Vue logo" src="../assets/logo.png">
       </div>
-    </nav>
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav">
+            <router-link tag="li" class="nav-item" to="matches">
+              <a class="nav-link" href="#">Matchs</a>
+            </router-link>
+            <router-link tag="li" class="nav-item" to="players">
+              <a class="nav-link" href="#">Joueurs</a>
+            </router-link>
+            <router-link tag="li" class="nav-item" to="inscription">
+              <a class="nav-link" href="#">Inscription</a>
+            </router-link>
+          </ul>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -23,9 +26,3 @@ export default {
   name: 'TopNav',
 };
 </script>
-
-<style>
-  .top-nav {
-    background-color: #3B3F59
-  }
-</style>

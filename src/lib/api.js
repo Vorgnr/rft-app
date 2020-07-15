@@ -3,8 +3,6 @@ import axios from 'axios';
 const instances = new Map();
 const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
 
-console.log('p.env', process.env);
-
 if (!apiEndpoint) {
   console.error('Not registered api ');
 }
@@ -24,6 +22,7 @@ export default {
           'Content-Type': 'application/json',
         },
         responseType: 'json',
+        crossDomain: true,
       });
 
       if (useLoader) {
@@ -36,8 +35,8 @@ export default {
           this.store.commit('net/decrement');
           return response;
         }, (error) => {
-          console.error(error.response);
           this.store.commit('net/decrement');
+          throw error.response.data.error;
         });
       }
 

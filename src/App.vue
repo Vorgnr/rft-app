@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <TopNav />
-    <div class="main uk-container uk-light" >
+    <Notification />
+    <div class="main container" >
       <router-view />
     </div>
     <Loader />
@@ -11,6 +12,7 @@
 <script>
 
 import TopNav from './components/TopNav.vue';
+import Notification from './components/Notification.vue';
 import Loader from './components/Loader.vue';
 
 export default {
@@ -18,14 +20,13 @@ export default {
   components: {
     TopNav,
     Loader,
+    Notification,
   },
 };
 </script>
 
 <style>
-  /* https://www.colorffy.com/palettes/60 */
   body {
-    background-color: #5D688A;
-    min-height: 100vh;
+    padding-top: 100px;
   }
 </style>

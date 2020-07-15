@@ -1,10 +1,12 @@
 <template>
-  <div>
-  <h1 class="uk-heading-small">Matchs</h1>
-    <table class="uk-table uk-table-divider">
-      <tbody>
-      </tbody>
-    </table>
+  <div class="row">
+    <div class="col-lg-8 col-md-7 col-sm-6">
+    <h2>Matchs</h2>
+      <table>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 

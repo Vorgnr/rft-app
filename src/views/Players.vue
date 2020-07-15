@@ -1,7 +1,7 @@
 <template>
   <div>
-  <h1 class="uk-heading-small">Joueurs</h1>
-    <table class="uk-table uk-table-divider">
+  <h2>Joueurs</h2>
+    <table>
       <tbody>
       </tbody>
     </table>
