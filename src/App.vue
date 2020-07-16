@@ -1,11 +1,10 @@
 <template>
   <div id="app">
-    <TopNav />
-    <Notification />
+    <top-nav />
+    <notification />
     <div class="main container" >
       <router-view />
     </div>
-    <Loader />
   </div>
 </template>
 
@@ -13,7 +12,6 @@
 
 import TopNav from './components/TopNav.vue';
 import Notification from './components/Notification.vue';
-import Loader from './components/Loader.vue';
 
 import './styles/main.scss';
 
@@ -21,7 +19,6 @@ export default {
   name: 'App',
   components: {
     TopNav,
-    Loader,
     Notification,
   },
 };

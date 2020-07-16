@@ -44,7 +44,7 @@ import { mapActions, mapGetters } from 'vuex';
 import vSelect from 'vue-select';
 
 export default {
-  name: 'Players',
+  name: 'Leaderboard',
   components: { vSelect },
 
   data() {

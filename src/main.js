@@ -1,5 +1,4 @@
 import Vue from 'vue';
-
 import App from './App.vue';
 import api from './lib/api';
 import store from './store';
