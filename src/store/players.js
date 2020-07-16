@@ -21,10 +21,10 @@ const actions = {
       .request(payload);
   },
 
-  async list({ commit }, { params }) {
+  async list({ commit }, obj = {}) {
     const payload = {
       method: 'GET',
-      params,
+      params: obj.params,
     };
 
     const response = await api

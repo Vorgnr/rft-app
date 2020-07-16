@@ -25,13 +25,15 @@
         <tr>
           <th></th>
           <th>Pseudo</th>
+          <th>Matchs joués</th>
           <th>Elo</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="{ player, elo } in players" :key="player.id" class="table-dark">
+        <tr v-for="{ player, elo } in players" :key="player.id">
           <td class="characters" :class="player.main_character" />
           <td>{{player.name}}</td>
+          <td>{{ elo.played_matches }}</td>
           <td>{{ elo.value }}</td>
         </tr>
       </tbody>
@@ -93,7 +95,7 @@ export default {
 
     async getPlayers({ leagueId, name }) {
       try {
-        await this.listPlayers({ params: { leagueId, name } });
+        await this.listPlayers({ params: { leagueId, name, withElo: 1 } });
       } catch (e) {
         this.notifyError(e);
       }

@@ -14,7 +14,7 @@ $vs-state-active-bg: #268BD2;
 $vs-state-active-color: #fff !default;
 
 //  Disabled State
-$vs-state-disabled-bg: rgb(248, 248, 248) !default;
+$vs-state-disabled-bg: inherit;
 $vs-state-disabled-color: #839496;
 $vs-state-disabled-controls-color: #A9BDBD;
 $vs-state-disabled-cursor: not-allowed !default;
