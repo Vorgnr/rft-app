@@ -1,9 +1,9 @@
 <template>
   <div class="row">
     <div class="col-lg-6">
+    <h2>Nouveau joueur</h2>
       <form>
         <fieldset>
-          <legend>Nouveau joueur</legend>
           <div class="form-group" :class="{'has-success':player.name}">
             <label for="name">Pseudo</label>
             <input
@@ -16,7 +16,7 @@
           </div>
           <div class="form-group">
             <label for="name">Main</label>
-            <characters :selected.sync="player.main_character" />
+            <character-select :selected.sync="player.main_character" />
           </div>
         </fieldset>
 
@@ -33,7 +33,7 @@
             role="status"
             aria-hidden="true"
           ></span>
-          Enregistrer
+          Get ready for ...
         </button>
       </form>
     </div>
@@ -42,12 +42,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import Characters from '../components/Characters.vue';
+import CharacterSelect from '../components/CharacterSelect.vue';
 
 export default {
   name: 'Inscription',
   components: {
-    Characters,
+    CharacterSelect,
   },
 
   data() {

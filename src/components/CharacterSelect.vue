@@ -1,7 +1,7 @@
 <template>
   <v-select
     :options="characters"
-    placeholder="Pick your character"
+    placeholder="Select your character"
     @input="$emit('update:selected', selected.code);"
     v-model="selected"
   >
@@ -36,7 +36,7 @@ const characters = [
   'geese',
   'gigas',
   'heihachi',
-  'hworang',
+  'hwoarang',
   'jack',
   'jin',
   'josie',
@@ -72,7 +72,7 @@ const capitalize = (s) => {
 };
 
 export default {
-  name: 'Characters',
+  name: 'CharactersSelect',
   components: { vSelect },
 
   data() {
