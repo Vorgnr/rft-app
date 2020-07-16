@@ -15,6 +15,8 @@ import TopNav from './components/TopNav.vue';
 import Notification from './components/Notification.vue';
 import Loader from './components/Loader.vue';
 
+import './styles/main.scss';
+
 export default {
   name: 'App',
   components: {

@@ -4,13 +4,10 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <select class="custom-select" @change="onLeagueChange($event)">
-            <option
-              v-for="league in leagues"
-              :key="league.id" :value="league.id"
-            >{{ league.name }}
-            </option>
-          </select>
+          <v-select
+            :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
+            @input="onLeagueChange"
+          />
         </div>
       </div>
       <div class="col">
@@ -26,12 +23,14 @@
     <table class="table table-hover">
       <thead>
         <tr>
+          <th></th>
           <th>Pseudo</th>
           <th>Elo</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="{ player, elo } in players" :key="player.id" class="table-dark">
+          <td class="characters" :class="player.main_character" />
           <td>{{player.name}}</td>
           <td>{{ elo.value }}</td>
         </tr>
@@ -42,9 +41,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import vSelect from 'vue-select';
 
 export default {
   name: 'Players',
+  components: { vSelect },
 
   data() {
     return {
@@ -86,8 +87,8 @@ export default {
       }, 600);
     },
 
-    onLeagueChange(event) {
-      this.getPlayers({ leagueId: event.target.value, name: this.search });
+    onLeagueChange(option) {
+      this.getPlayers({ leagueId: option.code, name: this.search });
     },
 
     async getPlayers({ leagueId, name }) {

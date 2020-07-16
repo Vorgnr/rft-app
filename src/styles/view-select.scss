@@ -1,0 +1,52 @@
+$vs-colors: (
+        lightest: #A9BDBD,
+        light: #A9BDBD,
+        dark: #A9BDBD,
+        darkest: #839496,
+) !default;
+
+//  Global Component Variables
+$vs-component-line-height: 1.5;
+$vs-component-placeholder-color: #A9BDBD;
+
+//  Active State
+$vs-state-active-bg: #268BD2;
+$vs-state-active-color: #fff !default;
+
+//  Disabled State
+$vs-state-disabled-bg: rgb(248, 248, 248) !default;
+$vs-state-disabled-color: #839496;
+$vs-state-disabled-controls-color: #A9BDBD;
+$vs-state-disabled-cursor: not-allowed !default;
+
+//  Borders
+$vs-border-width: 1px !default;
+$vs-border-style: solid !default;
+$vs-border-radius: 4px !default;
+$vs-border-color: #A9BDBD;
+
+//  Component Controls: Clear, Open Indicator
+$vs-controls-color: #839496;
+$vs-controls-size: 1 !default;
+$vs-controls-deselect-text-shadow: 0 1px 0 #fff;
+
+//  Selected
+$vs-selected-bg: #f0f0f0 !default;
+$vs-selected-border-color: #839496;
+$vs-selected-border-style: $vs-border-style !default;
+$vs-selected-border-width: $vs-border-width !default;
+
+//  Dropdown
+$vs-dropdown-z-index: 1000 !default;
+$vs-dropdown-min-width: 160px !default;
+$vs-dropdown-max-height: 350px !default;
+$vs-dropdown-box-shadow: 0px 3px 6px 0px map_get($vs-colors, 'darkest') !default;
+$vs-dropdown-bg: #A9BDBD;
+
+.vs__search {
+  color: map_get($vs-colors, 'darkest')
+}
+
+.vs__no-options {
+  color:rgb(73, 80, 87);
+}
