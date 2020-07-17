@@ -1,8 +1,9 @@
 <template>
   <v-select
     :options="characters"
-    placeholder="Select your character"
-    @input="$emit('update:selected', selected.code);"
+    :placeholder="placeholder"
+    :multiple="multiple"
+    @input="onChange"
     v-model="selected"
   >
     <template v-slot:option="option" >
@@ -66,14 +67,17 @@ const characters = [
   'zafina',
 ];
 
-const capitalize = (s) => {
-  if (typeof s !== 'string') return '';
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
-
 export default {
-  name: 'CharactersSelect',
+  name: 'CharacterSelect',
   components: { vSelect },
+
+  props: {
+    placeholder: {
+      type: String,
+      default: 'Select your character',
+    },
+    multiple: Boolean,
+  },
 
   data() {
     return {
@@ -82,8 +86,24 @@ export default {
     };
   },
 
+  methods: {
+    onChange() {
+      let code;
+      if (this.multiple) {
+        code = this.selected.map((s) => s.code).join(',');
+      } else {
+        ({ code } = this.selected);
+      }
+      this.$emit('input', code);
+    },
+  },
+
   computed: {
-    characters() { return this.ch.map((c) => ({ label: capitalize(c), code: c })); },
+    characters() {
+      return this.ch.map((c) => (
+        { label: this.$options.filters.capitalize(c), code: c }
+      ));
+    },
   },
 
 };

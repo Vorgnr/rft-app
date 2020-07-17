@@ -24,26 +24,28 @@
         <div class="form-group">
           <label>Player 1</label>
           <player-select
-            :players="selectedPlayer2
-              ? players.filter(p => selectedPlayer2.code !== p.id)
+            :players="match.player2_id
+              ? players.filter(p => match.player2_id !== p.id)
               : players"
-            v-model="selectedPlayer1"
+            v-model="match.player1_id"
             @input="validForm"
           />
         </div>
       </div>
       <div class="col">
-        <div class="form-group" v-if="selectedPlayer1">
+        <div class="form-group" v-if="match.player1_id">
           <label>Player 2</label>
           <player-select
-            :players="players.filter(p => selectedPlayer1.code !== p.id)"
-            v-model="selectedPlayer2"
+            :players="match.player1_id
+              ? players.filter(p => match.player1_id !== p.id)
+              : players"
+            v-model="match.player2_id"
             @input="validForm"
           />
         </div>
       </div>
     </div>
-    <div v-if="selectedPlayer1 && selectedPlayer2">
+    <div v-if="match.player1_id && match.player2_id">
       <div class="row">
         <div class="col">
           <div class="alert alert-dismissible alert-info">
@@ -76,6 +78,28 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label>Perso player 1</label>
+            <character-select
+              v-model="match.character1"
+              placeholder="Perso player 1"
+              multiple
+            />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label>Perso player 2</label>
+            <character-select
+              v-model="match.character2"
+              placeholder="Perso player 2"
+              multiple
+            />
+          </div>
+        </div>
+      </div>
     </div>
     <div class="row">
       <div class="col">
@@ -103,17 +127,16 @@
 import vSelect from 'vue-select';
 import { mapActions, mapGetters } from 'vuex';
 import PlayerSelect from '../components/PlayerSelect.vue';
+import CharacterSelect from '../components/CharacterSelect.vue';
 
 export default {
   name: 'Leaderboard',
-  components: { vSelect, PlayerSelect },
+  components: { vSelect, PlayerSelect, CharacterSelect },
 
   data() {
     return {
       matchIsValid: false,
       selectedLeague: null,
-      selectedPlayer1: null,
-      selectedPlayer2: null,
       match: {
         ft: 10,
       },
@@ -168,8 +191,6 @@ export default {
     async submit() {
       const match = {
         ...this.match,
-        player1_id: this.selectedPlayer1.code,
-        player2_id: this.selectedPlayer2.code,
         league_id: this.selectedLeague.code,
       };
       try {
@@ -183,8 +204,8 @@ export default {
 
     validForm() {
       if (
-        this.selectedPlayer1
-        && this.selectedPlayer2
+        this.match.player1_id
+        && this.match.player2_id
         && this.match.ft > 0
         && this.selectedLeague
       ) {

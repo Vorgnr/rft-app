@@ -1,6 +1,22 @@
 .characters {
   background-repeat: no-repeat;
+  height: 45px;
+  width: 70px;
+  background-position: -1px -4px;
 }
+
+.table {
+  td.character-thumbnail {
+    padding: 0;
+    padding-top: 0.2em;
+  }
+
+  div {
+    span.characters {
+      display:inline-table
+    }
+  }
+} 
 
 .akuma { background-image: url(../assets/characters/akuma.jpg) }
 .alisa { background-image: url(../assets/characters/alisa.jpg) }

@@ -3,6 +3,7 @@ import App from './App.vue';
 import api from './lib/api';
 import store from './store';
 import router from './routes';
+import './filters';
 
 api.connectStore(store);
 

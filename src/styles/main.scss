@@ -2,3 +2,25 @@
 @import "vue-select/src/scss/vue-select.scss";
 
 @import './characters.scss';
+
+td.winner {
+  background-color: rgba(42, 161, 152, 0.5);
+  color: #fff
+}
+
+td.loser {
+  background-color: rgba(203, 75, 22, 0.5);
+  color: #fff
+}
+
+td.borderl {
+  border-left: 1px solid #073642;
+}
+
+th.borderl {
+  border-left: 1px solid #073642;
+}
+
+.allignr {
+  text-align: right;
+}

@@ -16,7 +16,7 @@
           </div>
           <div class="form-group">
             <label for="name">Main</label>
-            <character-select :selected.sync="player.main_character" />
+            <character-select v-model="player.main_character" />
           </div>
         </fieldset>
 
