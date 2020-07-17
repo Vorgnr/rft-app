@@ -6,11 +6,11 @@
       </div>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav">
-          <router-link tag="li" class="nav-item" to="/matches">
-            <a class="nav-link" href="#">Matchs</a>
-          </router-link>
           <router-link tag="li" class="nav-item" to="/leaderboard">
             <a class="nav-link" href="#">Leaderboard</a>
+          </router-link>
+          <router-link tag="li" class="nav-item" to="/matches">
+            <a class="nav-link" href="#">Matchs</a>
           </router-link>
           <router-link tag="li" class="nav-item" to="/matches/new">
             <a class="nav-link" href="#">Nouveau match</a>

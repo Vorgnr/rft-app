@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Matches</h2>
+    <h2>Matchs</h2>
     <div class="row">
       <div class="col">
         <div class="form-group">
@@ -29,7 +29,7 @@
           <th></th>
           <th>Elo</th>
           <th>Score</th>
-          <th class="borderl allignr">Score 2</th>
+          <th class="borderl allignr">Score</th>
           <th>Elo</th>
           <th></th>
           <th class="allignr">Player 2</th>
@@ -55,6 +55,13 @@
         </tr>
       </tbody>
     </table>
+    <button
+      v-if="!noMoreMatches"
+      @click="getMoreMatches"
+      type="button"
+      class="btn btn-outline-primary btn-lg btn-block">
+      Voir plus
+    </button>
   </div>
 </template>
 
@@ -69,8 +76,10 @@ export default {
 
   data() {
     return {
+      perPage: 30,
+      page: 1,
       currentLeague: null,
-      search: '',
+      search: null,
     };
   },
 
@@ -80,6 +89,7 @@ export default {
     }),
     ...mapGetters('matches', {
       matches: 'list',
+      noMoreMatches: 'noMoreItems',
     }),
   },
 
@@ -88,6 +98,7 @@ export default {
       listLeagues: 'list',
     }),
     ...mapActions('matches', {
+      fetchMoreMatches: 'fetchMore',
       listMatches: 'list',
     }),
     ...mapActions('notifications', {
@@ -132,9 +143,29 @@ export default {
       this.getMatches(paylaod);
     },
 
-    async getMatches(params) {
+    async getMoreMatches() {
+      const payload = {
+        name: this.search,
+        perPage: this.perPage,
+        page: this.page + 1,
+      };
+      if (this.currentLeague) {
+        payload.leagueId = this.currentLeague.code;
+      }
       try {
-        await this.listMatches({ params });
+        await this.fetchMoreMatches({ params: payload });
+        this.page += 1;
+      } catch (e) {
+        this.notifyError(e);
+      }
+    },
+
+    async getMatches(params = {}) {
+      const payload = params;
+      payload.perPage = this.perPage;
+      payload.page = 1;
+      try {
+        await this.listMatches({ params: payload });
       } catch (e) {
         this.notifyError(e);
       }
