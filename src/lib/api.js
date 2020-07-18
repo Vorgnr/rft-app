@@ -36,7 +36,10 @@ export default {
           return response;
         }, (error) => {
           this.store.commit('net/decrement');
-          throw error.response.data.error;
+          if (error.response.data) {
+            throw error.response.data.error;
+          }
+          throw error.response.statusText;
         });
       }
 

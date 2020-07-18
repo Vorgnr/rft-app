@@ -22,39 +22,7 @@
         </div>
       </div>
     </div>
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>Player 1</th>
-          <th></th>
-          <th>Elo</th>
-          <th>Score</th>
-          <th class="borderl allignr">Score</th>
-          <th>Elo</th>
-          <th></th>
-          <th class="allignr">Player 2</th>
-          <th class="borderl">Terminé</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="{ player1, player2, match } in matches" :key="match.id">
-          <td :class="getMatchCssClass(1, match)" class="character-thumbnail">
-            <character-thumbnail :characters="match.character1 || player1.main_character" />
-          </td>
-          <td :class="getMatchCssClass(1, match)">{{ player1.name }}</td>
-          <td :class="getMatchCssClass(1, match)">{{ match.player1_elo }}</td>
-          <td :class="getMatchCssClass(1, match)">{{ match.player1_score }}</td>
-          <td class="borderl allignr"
-            :class="getMatchCssClass(2, match)">{{ match.player2_score }}</td>
-          <td :class="getMatchCssClass(2, match)">{{ match.player2_elo }}</td>
-          <td class="allignr" :class="getMatchCssClass(2, match)">{{ player2.name }}</td>
-          <td :class="getMatchCssClass(2, match)" class="character-thumbnail allignr">
-            <character-thumbnail :characters="match.character2 || player2.main_character" />
-          </td>
-          <td class="borderl">{{ match.completed_at | format }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <match-table :matches="matches" @open="open"/>
     <button
       v-if="!noMoreMatches"
       @click="getMoreMatches"
@@ -68,11 +36,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import vSelect from 'vue-select';
-import CharacterThumbnail from '../components/CharacterThumbnail.vue';
+import MatchTable from '../components/MatchTable.vue';
 
 export default {
   name: 'Matches',
-  components: { vSelect, CharacterThumbnail },
+  components: { vSelect, MatchTable },
 
   data() {
     return {
@@ -123,16 +91,6 @@ export default {
       }, 600);
     },
 
-    getMatchCssClass: (player, match) => {
-      if (!match.completed_at) {
-        return 'not-completed';
-      }
-      if (player === 1) {
-        return match.player1_score > match.player2_score ? 'winner' : 'loser';
-      }
-      return match.player2_score > match.player1_score ? 'winner' : 'loser';
-    },
-
     onLeagueChange(option) {
       const paylaod = {
         name: this.search,
@@ -177,6 +135,10 @@ export default {
       } catch (e) {
         this.notifyError(e);
       }
+    },
+
+    open(id) {
+      this.$router.push({ name: 'match', params: { id } });
     },
   },
 

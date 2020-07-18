@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4>Nouveau match</h4>
+    <h2>Nouveau match</h2>
     <div class="row">
       <div class="col">
         <div class="form-group">
@@ -130,7 +130,7 @@ import PlayerSelect from '../components/PlayerSelect.vue';
 import CharacterSelect from '../components/CharacterSelect.vue';
 
 export default {
-  name: 'Leaderboard',
+  name: 'CreateMatch',
   components: { vSelect, PlayerSelect, CharacterSelect },
 
   data() {
@@ -149,7 +149,6 @@ export default {
     }),
     ...mapGetters('leagues', {
       leagues: 'list',
-      currentLeague: 'currentLeague',
     }),
   },
 

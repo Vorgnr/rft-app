@@ -26,7 +26,7 @@
           <th></th>
           <th>Pseudo</th>
           <th>Matchs joués</th>
-          <th>Elo</th>
+          <th>Points</th>
         </tr>
       </thead>
       <tbody>

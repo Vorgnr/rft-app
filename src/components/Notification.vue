@@ -29,8 +29,8 @@ export default {
 
 <style scoped>
   #alert-container {
-    position: absolute;
-    top: 100px;
+    position: fixed;
+    top: 20vh;
     right: 20px;
     z-index: 5000;
   }
