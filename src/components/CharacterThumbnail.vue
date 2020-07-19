@@ -16,7 +16,12 @@ export default {
   },
 
   computed: {
-    getClasses() { return this.characters.split(','); },
+    getClasses() {
+      if (!this.characters) {
+        return ['mokunjin'];
+      }
+      return this.characters.split(',');
+    },
   },
 
 };

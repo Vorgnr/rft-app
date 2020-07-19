@@ -31,7 +31,9 @@
       </thead>
       <tbody>
         <tr v-for="{ player, elo } in players" :key="player.id">
-          <td class="characters" :class="player.main_character" />
+          <td class="character-thumbnail">
+            <character-thumbnail :characters="player.main_character" />
+          </td>
           <td>{{player.name}}</td>
           <td>{{ elo.played_matches }}</td>
           <td>{{ elo.value }}</td>
@@ -44,10 +46,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import vSelect from 'vue-select';
+import CharacterThumbnail from '../components/CharacterThumbnail.vue';
 
 export default {
   name: 'Leaderboard',
-  components: { vSelect },
+  components: { vSelect, CharacterThumbnail },
 
   data() {
     return {

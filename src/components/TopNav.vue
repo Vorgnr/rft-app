@@ -2,7 +2,7 @@
   <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
     <div class="container">
       <div class="navbar-brand">
-        <img width="55" height="55" alt="Vue logo" src="../assets/logo.png" />
+        <img width="70" height="28" alt="Vue logo" src="../assets/logo.png" />
       </div>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav">

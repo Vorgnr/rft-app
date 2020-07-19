@@ -48,6 +48,7 @@ const characters = [
   'lars',
   'law',
   'lee',
+  'lei',
   'leo',
   'leroy',
   'lili',
