@@ -215,7 +215,7 @@ export default {
     },
   },
 
-  async mounted() {
+  async created() {
     await this.getLeagues();
     await this.getPlayers();
   },
