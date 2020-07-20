@@ -48,6 +48,13 @@
         </tr>
       </tbody>
     </table>
+    <button
+      v-if="!noMorePlayers"
+      @click="getMorePlayers"
+      type="button"
+      class="btn btn-outline-primary btn-lg btn-block">
+      Voir plus
+    </button>
   </div>
 </template>
 
@@ -63,6 +70,8 @@ export default {
 
   data() {
     return {
+      perPage: 30,
+      page: 1,
       search: '',
     };
   },
@@ -70,6 +79,7 @@ export default {
   computed: {
     ...mapGetters('players', {
       players: 'list',
+      noMorePlayers: 'noMoreItems',
     }),
     ...mapGetters('leagues', {
       leagues: 'list',
@@ -79,6 +89,7 @@ export default {
 
   methods: {
     ...mapActions('players', {
+      fetchMorePlayers: 'fetchMore',
       listPlayers: 'list',
     }),
     ...mapActions('leagues', {
@@ -107,7 +118,29 @@ export default {
 
     async getPlayers({ leagueId, name }) {
       try {
-        await this.listPlayers({ params: { leagueId, name, withElo: 1 } });
+        await this.listPlayers({
+          params: {
+            leagueId, name, withElo: 1, page: 1, perPage: this.perPage,
+          },
+        });
+      } catch (e) {
+        this.notifyError(e);
+      }
+    },
+
+    async getMorePlayers() {
+      const payload = {
+        name: this.search,
+        perPage: this.perPage,
+        page: this.page + 1,
+        withElo: 1,
+      };
+      if (this.currentLeague) {
+        payload.leagueId = this.currentLeague.code;
+      }
+      try {
+        await this.fetchMorePlayers({ params: payload });
+        this.page += 1;
       } catch (e) {
         this.notifyError(e);
       }

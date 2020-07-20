@@ -75,7 +75,7 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: 'Select your character',
+      default: 'Choisissez votre personnage',
     },
     multiple: Boolean,
   },
