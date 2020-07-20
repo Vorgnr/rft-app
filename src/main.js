@@ -1,9 +1,12 @@
 import Vue from 'vue';
 import App from './App.vue';
-import api from './lib/api';
 import store from './store';
+import api from './lib/api';
 import router from './routes';
+import title from './mixins/title';
 import './filters';
+
+Vue.mixin(title);
 
 api.connectStore(store);
 

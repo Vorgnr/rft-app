@@ -40,6 +40,7 @@ import MatchTable from '../components/MatchTable.vue';
 
 export default {
   name: 'Matches',
+  title: 'Matchs',
   components: { vSelect, MatchTable },
 
   data() {
@@ -142,7 +143,7 @@ export default {
     },
   },
 
-  async mounted() {
+  async created() {
     await this.getLeagues();
     await this.getMatches();
   },
