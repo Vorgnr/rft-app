@@ -5,7 +5,7 @@ const mutations = {
     s.isLazy = true;
     s.list = list;
     const [currentLeague] = list;
-    s.currentLeague = currentLeague;
+    s.currentLeagueId = currentLeague && currentLeague.id;
   },
 };
 
@@ -27,7 +27,7 @@ const actions = {
 
 const getters = {
   list: (s) => s.list,
-  currentLeague: (s) => s.currentLeague,
+  currentLeagueId: (s) => s.currentLeagueId,
 };
 
 export default {

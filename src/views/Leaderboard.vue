@@ -7,7 +7,14 @@
           <v-select
             :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
             @input="onLeagueChange"
-          />
+          >
+            <template v-slot:no-options="{ search, searching }">
+              <template v-if="searching">
+                Aucune league trouvée pour <em>{{ search }}</em>.
+              </template>
+              <span v-else> Aucune league </span>
+            </template>
+          </v-select>
         </div>
       </div>
       <div class="col">
@@ -16,7 +23,8 @@
             v-model="search"
             @input="debounceSearch"
             class="form-control"
-            placeholder="Rechercher par pseudo...">
+            placeholder="Rechercher par pseudo..."
+          />
         </div>
       </div>
     </div>
@@ -50,6 +58,7 @@ import CharacterThumbnail from '../components/CharacterThumbnail.vue';
 
 export default {
   name: 'Leaderboard',
+  title: 'Leaderboard',
   components: { vSelect, CharacterThumbnail },
 
   data() {
@@ -64,7 +73,7 @@ export default {
     }),
     ...mapGetters('leagues', {
       leagues: 'list',
-      currentLeague: 'currentLeague',
+      currentLeagueId: 'currentLeagueId',
     }),
   },
 
@@ -88,7 +97,7 @@ export default {
       clearTimeout(this.debounce);
       this.debounce = setTimeout(() => {
         this.message = event.target.value;
-        this.getPlayers({ leagueId: this.currentLeague.id, name: this.search });
+        this.getPlayers({ leagueId: this.currentLeagueId, name: this.search });
       }, 600);
     },
 
@@ -115,7 +124,7 @@ export default {
 
   async mounted() {
     await this.getLeagues();
-    await this.getPlayers({ leagueId: this.currentLeague.id });
+    await this.getPlayers({ leagueId: this.currentLeagueId });
   },
 };
 </script>
