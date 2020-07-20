@@ -1,15 +1,20 @@
 <template>
   <div id="app">
-    <top-nav />
+    <top-nav @signout="signout" :is-auth="isAuth" v-if="$route.name !== 'login'" />
     <notification />
-    <div class="main container" >
-      <router-view />
+    <div class="main container">
+      <router-view v-if="!loading" />
+      <div v-if="loading" class="d-flex justify-content-center" style="padding-top: 25vh">
+        <div class="spinner-border text-secondary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
+import { mapActions, mapGetters } from 'vuex';
 import TopNav from './components/TopNav.vue';
 import Notification from './components/Notification.vue';
 
@@ -21,11 +26,29 @@ export default {
     TopNav,
     Notification,
   },
+
+  computed: {
+    ...mapGetters('auth', {
+      isAuth: 'isAuth',
+      loading: 'loading',
+    }),
+  },
+
+  methods: {
+    ...mapActions('auth', {
+      getSession: 'getSession',
+      signout: 'signout',
+    }),
+  },
+
+  async created() {
+    await this.getSession();
+  },
 };
 </script>
 
 <style>
-  body {
-    padding-top: 100px;
-  }
+body {
+  padding-top: 100px;
+}
 </style>

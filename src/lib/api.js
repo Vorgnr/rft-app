@@ -23,6 +23,7 @@ export default {
         },
         responseType: 'json',
         crossDomain: true,
+        withCredentials: true,
       });
 
       if (useLoader) {
