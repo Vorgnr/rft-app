@@ -8,6 +8,7 @@
             :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
             v-model="currentLeague"
             @input="onLeagueChange"
+            placeholder='Filtrer par league'
           />
         </div>
       </div>

@@ -7,6 +7,9 @@
           <v-select
             :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
             @input="onLeagueChange"
+            :v-model="currentSelectedLeague"
+            placeholder='Selectionnez une league'
+            :clearable="false"
           >
             <template v-slot:no-options="{ search, searching }">
               <template v-if="searching">
@@ -83,7 +86,7 @@ export default {
     }),
     ...mapGetters('leagues', {
       leagues: 'list',
-      currentLeagueId: 'currentLeagueId',
+      currentSelectedLeague: 'currentSelectedLeague',
     }),
   },
 
@@ -94,6 +97,7 @@ export default {
     }),
     ...mapActions('leagues', {
       listLeagues: 'list',
+      setCurrentLeague: 'setCurrentLeague',
     }),
     ...mapActions('notifications', {
       notify: 'add',
@@ -108,11 +112,12 @@ export default {
       clearTimeout(this.debounce);
       this.debounce = setTimeout(() => {
         this.message = event.target.value;
-        this.getPlayers({ leagueId: this.currentLeagueId, name: this.search });
+        this.getPlayers({ leagueId: this.currentSelectedLeague.code, name: this.search });
       }, 600);
     },
 
     onLeagueChange(option) {
+      this.setCurrentLeague(option);
       this.getPlayers({ leagueId: option.code, name: this.search });
     },
 
@@ -134,10 +139,9 @@ export default {
         perPage: this.perPage,
         page: this.page + 1,
         withElo: 1,
+        leagueId: this.currentSelectedLeague.code,
       };
-      if (this.currentLeague) {
-        payload.leagueId = this.currentLeague.code;
-      }
+
       try {
         await this.fetchMorePlayers({ params: payload });
         this.page += 1;
@@ -157,7 +161,7 @@ export default {
 
   async mounted() {
     await this.getLeagues();
-    await this.getPlayers({ leagueId: this.currentLeagueId });
+    await this.getPlayers({ leagueId: this.currentSelectedLeague.code });
   },
 };
 </script>

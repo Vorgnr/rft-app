@@ -5,7 +5,12 @@ const mutations = {
     s.isLazy = true;
     s.list = list;
     const [currentLeague] = list;
-    s.currentLeagueId = currentLeague && currentLeague.id;
+    if (currentLeague) {
+      s.currentSelectedLeague = { code: currentLeague.id, label: currentLeague.name };
+    }
+  },
+  setCurrentLeague(s, selectedLeague) {
+    s.currentSelectedLeague = selectedLeague;
   },
 };
 
@@ -23,11 +28,16 @@ const actions = {
       commit('setList', response.data);
     }
   },
+
+  setCurrentLeague({ commit }, selectedLeague) {
+    commit('setCurrentLeague', selectedLeague);
+  },
 };
 
 const getters = {
   list: (s) => s.list,
   currentLeagueId: (s) => s.currentLeagueId,
+  currentSelectedLeague: (s) => s.currentSelectedLeague,
 };
 
 export default {
@@ -37,6 +47,7 @@ export default {
   state: {
     isLazy: false,
     list: [],
+    currentSelectedLeague: null,
   },
   getters,
 };

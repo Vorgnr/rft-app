@@ -8,7 +8,7 @@
     <template v-slot:option="option" >
       <div
         class="characters"
-        :class="option.mainCharacter"
+        :class="option.mainCharacter || 'mokunjin'"
         style="padding-left: 80px; height: 50px">
         <div style="padding-top: 11px">{{ option.label }}</div>
       </div>
