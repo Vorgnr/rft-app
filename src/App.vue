@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <top-nav @signout="signout" :is-auth="isAuth" v-if="$route.name !== 'login'" />
+    <top-nav @signout="submitSignout" :is-auth="isAuth" v-if="$route.name !== 'login'" />
     <notification />
     <div class="main container">
       <router-view v-if="!loading" />
@@ -39,6 +39,11 @@ export default {
       getSession: 'getSession',
       signout: 'signout',
     }),
+
+    async submitSignout() {
+      await this.signout();
+      this.$router.push({ name: 'home' });
+    },
   },
 
   async created() {
@@ -46,9 +51,3 @@ export default {
   },
 };
 </script>
-
-<style>
-body {
-  padding-top: 100px;
-}
-</style>
