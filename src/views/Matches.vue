@@ -4,16 +4,6 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <v-select
-            :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
-            v-model="currentLeague"
-            @input="onLeagueChange"
-            placeholder='Filtrer par league'
-          />
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
           <input
             v-model="search"
             @input="debounceSearch"
@@ -22,15 +12,37 @@
           />
         </div>
       </div>
+      <div class="col">
+        <div class="form-group">
+          <v-select
+            :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
+            v-model="currentLeague"
+            @input="onLeagueChange"
+            placeholder="Filtrer par league"
+          />
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <v-select
+            :options="[
+              { label: 'Non modéré', code: 'moderatedAt' },
+              { label: 'Non terminé', code: 'completedAt' },
+            ]"
+            v-model="matchStatus"
+            @input="onStatusChange"
+            placeholder="Filtrer par statut de match"
+          />
+        </div>
+      </div>
     </div>
-    <match-table :matches="matches" @open="open"/>
+    <match-table :matches="matches" @open="open" :is-auth="isAuth" />
     <button
       v-if="!noMoreMatches"
       @click="getMoreMatches"
       type="button"
-      class="btn btn-outline-primary btn-lg btn-block">
-      Voir plus
-    </button>
+      class="btn btn-outline-primary btn-lg btn-block"
+    >Voir plus</button>
   </div>
 </template>
 
@@ -49,6 +61,7 @@ export default {
       perPage: 30,
       page: 1,
       currentLeague: null,
+      matchStatus: null,
       search: null,
     };
   },
@@ -60,6 +73,9 @@ export default {
     ...mapGetters('matches', {
       matches: 'list',
       noMoreMatches: 'noMoreItems',
+    }),
+    ...mapGetters('auth', {
+      isAuth: 'isAuth',
     }),
   },
 
@@ -79,28 +95,19 @@ export default {
       loading: 'net/loading',
     }),
 
-    debounceSearch(event) {
+    debounceSearch() {
       clearTimeout(this.debounce);
       this.debounce = setTimeout(() => {
-        this.message = event.target.value;
-        const payload = {
-          name: this.search,
-        };
-        if (this.currentLeague) {
-          payload.leagueId = this.currentLeague.code;
-        }
-        this.getMatches(payload);
+        this.getMatches();
       }, 600);
     },
 
-    onLeagueChange(option) {
-      const paylaod = {
-        name: this.search,
-      };
-      if (option) {
-        paylaod.leagueId = option.code;
-      }
-      this.getMatches(paylaod);
+    onLeagueChange() {
+      this.getMatches();
+    },
+
+    onStatusChange() {
+      this.getMatches();
     },
 
     async getMoreMatches() {
@@ -111,6 +118,9 @@ export default {
       };
       if (this.currentLeague) {
         payload.leagueId = this.currentLeague.code;
+      }
+      if (this.matchStatus) {
+        payload[this.matchStatus] = 'null';
       }
       try {
         await this.fetchMoreMatches({ params: payload });
@@ -124,6 +134,15 @@ export default {
       const payload = params;
       payload.perPage = this.perPage;
       payload.page = 1;
+      if (!params.name && this.search) {
+        payload.name = this.search;
+      }
+      if (!payload.leagueId && this.currentLeague) {
+        payload.leagueId = this.currentLeague.code;
+      }
+      if (this.matchStatus) {
+        payload[this.matchStatus.code] = 'null';
+      }
       try {
         await this.listMatches({ params: payload });
       } catch (e) {

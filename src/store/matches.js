@@ -48,6 +48,14 @@ const actions = {
       .request(payload);
   },
 
+  async moderate({ commit }, { matchId }) {
+    const response = await api
+      .from('matches')
+      .put(`/${matchId}/moderate`);
+
+    commit('updateItem', response.data);
+  },
+
   async update({ commit }, { matchId, body }) {
     const response = await api
       .from('matches')
