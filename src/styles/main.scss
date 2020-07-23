@@ -3,6 +3,17 @@
 
 @import './characters.scss';
 @import './form.scss';
+@import './tooltip.scss';
+
+body {
+  padding-top: 70px;
+}
+
+@media (min-width: 1200px) {
+  .container, .container-sm, .container-md, .container-lg, .container-xl {
+      max-width: 1298px;
+  }
+}
 
 td.winner {
   background-color: rgba(42, 161, 152, 0.5);
@@ -31,5 +42,9 @@ th.borderl {
 }
 
 .icon.click {
+  cursor: pointer;
+}
+
+.pointer {
   cursor: pointer;
 }
