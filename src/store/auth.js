@@ -58,6 +58,7 @@ const getters = {
   error: (state) => state.error,
   player: (state) => state.player,
   isAuth: (state) => state.isAuth,
+  isAdmin: (state) => state.player && Boolean(state.player.is_admin),
   loading: (state) => state.loading,
 };
 
