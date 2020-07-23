@@ -1,14 +1,14 @@
 <template>
   <v-select
-    :options="characters"
+    :options="ch"
     :placeholder="placeholder"
     :multiple="multiple"
     @input="onChange"
     v-model="selected"
   >
     <template v-slot:option="option" >
-      <div class="characters" :class="option.code" style="padding-left: 80px; height: 50px">
-        <div style="padding-top: 11px">{{ option.label }}</div>
+      <div class="characters" :class="option.label" style="padding-left: 80px; height: 50px">
+        <div style="padding-top: 11px">{{ option.label | capitalize }}</div>
       </div>
     </template>
   </v-select>
@@ -91,19 +91,11 @@ export default {
     onChange() {
       let code;
       if (this.multiple) {
-        code = this.selected.map((s) => s.code).join(',');
+        code = this.selected.map((s) => s).join(',');
       } else {
-        ({ code } = this.selected);
+        code = this.selected;
       }
       this.$emit('input', code);
-    },
-  },
-
-  computed: {
-    characters() {
-      return this.ch.map((c) => (
-        { label: this.$options.filters.capitalize(c), code: c }
-      ));
     },
   },
 

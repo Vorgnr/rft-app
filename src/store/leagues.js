@@ -6,7 +6,11 @@ const mutations = {
     s.list = list;
     const [currentLeague] = list;
     if (currentLeague) {
-      s.currentSelectedLeague = { code: currentLeague.id, label: currentLeague.name };
+      s.currentSelectedLeague = {
+        code: currentLeague.id,
+        label: currentLeague.name,
+        rankTreshold: currentLeague.rank_treshold,
+      };
     }
   },
   setCurrentLeague(s, selectedLeague) {

@@ -5,17 +5,20 @@
       <div class="col">
         <div class="form-group">
           <v-select
-            :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
+            :options="leagues.map(({ id, name, rank_treshold: rankTreshold }) => (
+              { label: name, code: id, rankTreshold  }
+            ))"
             @input="onLeagueChange"
             :v-model="currentSelectedLeague"
-            placeholder='Selectionnez une league'
+            placeholder="Selectionnez une league"
             :clearable="false"
           >
             <template v-slot:no-options="{ search, searching }">
               <template v-if="searching">
-                Aucune league trouvée pour <em>{{ search }}</em>.
+                Aucune league trouvée pour
+                <em>{{ search }}</em>.
               </template>
-              <span v-else> Aucune league </span>
+              <span v-else>Aucune league</span>
             </template>
           </v-select>
         </div>
@@ -34,20 +37,30 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th></th>
+          <th>Pos</th>
+          <th>Char</th>
           <th>Pseudo</th>
-          <th>Matchs joués</th>
+          <th>Matchs</th>
           <th>Points</th>
+          <th>Rang</th>
+          <th v-if="isAuth"></th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="{ player, elo } in players" :key="player.id">
+        <tr v-for="({ player, elo }, index) in players" :key="player.id">
+          <td>
+            <span v-if="elo.value !== null">{{index+1}}</span>
+          </td>
           <td class="character-thumbnail">
             <character-thumbnail :characters="player.main_character" />
           </td>
           <td>{{player.name}}</td>
           <td>{{ elo.played_matches }}</td>
           <td>{{ elo.value }}</td>
+          <td>{{ getRank(elo.value) }}</td>
+          <td v-if="isAuth">
+            <v-icon name="edit" @click.native="open(player.id)" class="click" />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -55,9 +68,8 @@
       v-if="!noMorePlayers"
       @click="getMorePlayers"
       type="button"
-      class="btn btn-outline-primary btn-lg btn-block">
-      Voir plus
-    </button>
+      class="btn btn-outline-primary btn-lg btn-block"
+    >Voir plus</button>
   </div>
 </template>
 
@@ -88,6 +100,9 @@ export default {
       leagues: 'list',
       currentSelectedLeague: 'currentSelectedLeague',
     }),
+    ...mapGetters('auth', {
+      isAuth: 'isAuth',
+    }),
   },
 
   methods: {
@@ -108,11 +123,26 @@ export default {
       loading: 'net/loading',
     }),
 
+    getRank(eloValue) {
+      if (eloValue === null) {
+        return null;
+      }
+
+      if (!this.currentSelectedLeague) {
+        return null;
+      }
+
+      return Math.floor(eloValue / this.currentSelectedLeague.rankTreshold);
+    },
+
     debounceSearch(event) {
       clearTimeout(this.debounce);
       this.debounce = setTimeout(() => {
         this.message = event.target.value;
-        this.getPlayers({ leagueId: this.currentSelectedLeague.code, name: this.search });
+        this.getPlayers({
+          leagueId: this.currentSelectedLeague.code,
+          name: this.search,
+        });
       }, 600);
     },
 
@@ -125,7 +155,11 @@ export default {
       try {
         await this.listPlayers({
           params: {
-            leagueId, name, withElo: 1, page: 1, perPage: this.perPage,
+            leagueId,
+            name,
+            withElo: 1,
+            page: 1,
+            perPage: this.perPage,
           },
         });
       } catch (e) {
@@ -156,6 +190,10 @@ export default {
       } catch (e) {
         this.notifyError(e);
       }
+    },
+
+    open(id) {
+      this.$router.push({ name: 'player', params: { id } });
     },
   },
 

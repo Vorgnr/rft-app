@@ -26,7 +26,7 @@
           </div>
           <div class="form-group">
             <label for="name">Main</label>
-            <character-select v-model="player.main_character" />
+            <character-select v-model="player.main_character" placeholder="Main"/>
           </div>
           <div class="form-group">
             <label for="password">Mot de passe</label>

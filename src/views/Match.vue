@@ -1,5 +1,12 @@
 <template>
   <div v-if="match.match">
+    <div class="row mb-3">
+      <div class="col">
+        <router-link tag="a" to="/matches">
+          <v-icon name="arrow-left" />Retour
+        </router-link>
+      </div>
+    </div>
     <div
       :class="match.match.completed_at ? 'border-primary' : 'border-info'"
       class="card border-primary mb-3"
@@ -18,6 +25,12 @@
             v-if="match.match.completed_at"
             class="card-text"
           >Terminé le {{ match.match.completed_at | format }}</li>
+          <li
+            v-if="match.match.moderated_at"
+            class="card-text"
+          >
+            Moderé le {{ match.match.moderated_at | format }}
+          </li>
         </ul>
       </div>
     </div>
@@ -54,7 +67,7 @@
               <div class="form-group">
                 <label for="name">Score</label>
                 <input
-                  :disabled="disabled"
+                  :disabled="matchIsCompleted"
                   class="form-control col-md-4"
                   type="number"
                   :placeholder="`Score ${match.player1.name}`"
@@ -69,20 +82,39 @@
                   multiple
                 />
               </div>
-              <div class="form-group">
-                <button
-                  class="btn"
-                  :disabled="disabled"
-                  @click="toogleRageQuit(1)"
-                  :class="!match.match.player1_ragequit ? 'btn-outline-warning' : 'btn-warning'"
-                >
-                  <span
-                    v-if="match.match.player1_ragequit"
-                  >
-                    {{ match.player1.name }} à abandonné
-                  </span>
-                  <span v-if="!match.match.player1_ragequit">Abandon</span>
-                </button>
+              <div class="row" v-if="!matchIsCompleted">
+                <div class="col">
+                  <div class="form-group">
+                    <button
+                      @click="toogleForfeit(1)"
+                      class="btn"
+                      :class="!match.match.player1_forfeit ? 'btn-outline-warning' : 'btn-warning'"
+                    >
+                      <span
+                        v-if="match.match.player1_forfeit"
+                      >
+                        {{ match.player1.name }} ne s'est pas présenté
+                      </span>
+                      <span v-if="!match.match.player1_forfeit">Abandon</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="col">
+                  <div  class="form-group">
+                    <button
+                      @click="toogleRageQuit(1)"
+                      class="btn"
+                      :class="!match.match.player1_ragequit ? 'btn-outline-warning' : 'btn-warning'"
+                    >
+                      <span
+                        v-if="match.match.player1_ragequit"
+                      >
+                        {{ match.player1.name }} à quitté le match
+                      </span>
+                      <span v-if="!match.match.player1_ragequit">RQ</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -94,7 +126,7 @@
               <div class="form-group">
                 <label for="name">Score</label>
                 <input
-                  :disabled="disabled"
+                  :disabled="matchIsCompleted"
                   class="form-control col-md-4"
                   type="number"
                   :placeholder="`Score ${match.player2.name}`"
@@ -109,29 +141,57 @@
                   multiple
                 />
               </div>
-              <div class="form-group">
-                <button
-                  :disabled="disabled"
-                  @click="toogleRageQuit(2)"
-                  class="btn"
-                  :class="!match.match.player2_ragequit ? 'btn-outline-warning' : 'btn-warning'"
-                >
-                  <span
-                    v-if="match.match.player2_ragequit"
-                  >
-                    {{ match.player2.name }} à abandonné
-                  </span>
-                  <span v-if="!match.match.player2_ragequit">Abandon</span>
-                </button>
+              <div class="row" v-if="!matchIsCompleted">
+                <div class="col">
+                  <div class="form-group">
+                    <button
+                      @click="toogleForfeit(2)"
+                      class="btn"
+                      :class="!match.match.player2_forfeit ? 'btn-outline-warning' : 'btn-warning'"
+                    >
+                      <span
+                        v-if="match.match.player2_forfeit"
+                      >
+                        {{ match.player2.name }} ne s'est pas présenté
+                      </span>
+                      <span v-if="!match.match.player2_forfeit">Abandon</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="col">
+                  <div  class="form-group">
+                    <button
+                      @click="toogleRageQuit(2)"
+                      class="btn"
+                      :class="!match.match.player2_ragequit ? 'btn-outline-warning' : 'btn-warning'"
+                    >
+                      <span
+                        v-if="match.match.player2_ragequit"
+                      >
+                        {{ match.player2.name }} à quitté le match
+                      </span>
+                      <span v-if="!match.match.player2_ragequit">RQ</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row" v-if="!disabled">
+    <div class="row" v-if="!this.match.match.moderated_at">
       <div class="col">
-        <button @click="submit" class="btn btn-primary" type="button">Mettre à jour</button>
+        <button
+          v-if="canUpdate"
+          @click="submit"
+          class="btn btn-primary"
+          type="button">Mettre à jour</button>
+        <button
+          v-if="canModerate"
+          @click="submitModerate"
+          class="btn btn-primary"
+          type="button">Valider et distribuer les points</button>
       </div>
     </div>
   </div>
@@ -154,9 +214,32 @@ export default {
     ...mapGetters('leagues', {
       leagues: 'list',
     }),
+    ...mapGetters('auth', {
+      isAdmin: 'isAdmin',
+      authPlayer: 'player',
+    }),
 
-    disabled() {
-      return !!this.match.match.completed_at;
+    matchIsCompleted() {
+      return Boolean(this.match.match.completed_at);
+    },
+
+    canModerate() {
+      return this.matchIsCompleted && !this.match.match.moderated_at && this.isAdmin;
+    },
+
+    canUpdate() {
+      if (!this.matchIsCompleted) {
+        return false;
+      }
+
+      if (this.isAdmin) {
+        return true;
+      }
+
+      return [
+        this.match.match.player1_id,
+        this.match.match.player2_id,
+      ].indexOf(this.authPlayer.id) > -1;
     },
   },
 
@@ -164,6 +247,7 @@ export default {
     ...mapActions('matches', {
       getById: 'getById',
       update: 'update',
+      moderate: 'moderate',
     }),
     ...mapActions('leagues', {
       listLeagues: 'list',
@@ -181,11 +265,33 @@ export default {
       }
     },
 
+    toogleForfeit(playerIndex) {
+      if (playerIndex === 1) {
+        this.match.match.player1_forfeit = !this.match.match.player1_forfeit;
+        if (this.match.match.player1_forfeit) {
+          this.match.match.player2_forfeit = false;
+          this.match.match.player1_ragequit = false;
+          this.match.match.player2_ragequit = false;
+        }
+      }
+
+      if (playerIndex === 2) {
+        this.match.match.player2_forfeit = !this.match.match.player2_forfeit;
+        if (this.match.match.player2_forfeit) {
+          this.match.match.player1_forfeit = false;
+          this.match.match.player1_ragequit = false;
+          this.match.match.player2_ragequit = false;
+        }
+      }
+    },
+
     toogleRageQuit(playerIndex) {
       if (playerIndex === 1) {
         this.match.match.player1_ragequit = !this.match.match.player1_ragequit;
         if (this.match.match.player1_ragequit) {
           this.match.match.player2_ragequit = false;
+          this.match.match.player1_forfeit = false;
+          this.match.match.player2_forfeit = false;
         }
       }
 
@@ -193,20 +299,26 @@ export default {
         this.match.match.player2_ragequit = !this.match.match.player2_ragequit;
         if (this.match.match.player2_ragequit) {
           this.match.match.player1_ragequit = false;
+          this.match.match.player1_forfeit = false;
+          this.match.match.player2_forfeit = false;
         }
       }
     },
 
     async submit() {
-      const body = {
-        player1_score: this.match.match.player1_score,
-        player2_score: this.match.match.player2_score,
-        character1: this.match.match.character1,
-        character2: this.match.match.character2,
-      };
       try {
-        await this.update({ matchId: this.$route.params.id, body });
+        await this.update({ matchId: this.$route.params.id, body: this.match.match });
         this.notify({ title: 'Match mis à jour', type: 'success' });
+        this.$router.push({ name: 'matches' });
+      } catch (e) {
+        this.notifyError(e);
+      }
+    },
+
+    async submitModerate() {
+      try {
+        await this.moderate({ matchId: this.$route.params.id });
+        this.notify({ title: 'Match modéré', type: 'success' });
         this.$router.push({ name: 'matches' });
       } catch (e) {
         this.notifyError(e);

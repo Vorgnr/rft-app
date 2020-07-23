@@ -12,8 +12,9 @@
         <th>Elo</th>
         <th></th>
         <th class="allignr">Player 2</th>
-        <th class="borderl"></th>
+        <th class="borderl">Terminé le</th>
         <th></th>
+        <th v-if="isAuth"></th>
       </tr>
     </thead>
     <tbody>
@@ -27,12 +28,16 @@
         <td :class="getMatchCssClass(1, match)">{{ match.player1_previous_elo }}</td>
         <td :class="getMatchCssClass(1, match)">{{ match.player1_elo }}</td>
         <td :class="getMatchCssClass(1, match)">
-          {{ match.player1_ragequit ? 'RQ ' : '' }}{{ match.player1_score }}
+          <span v-if="match.player1_ragequit"> RQ</span>
+          <span v-if="match.player1_forfeit">Abandon</span>
+          <span v-else>{{ match.player1_score }}</span>
         </td>
         <td
           class="borderl allignr"
           :class="getMatchCssClass(2, match)">
-            {{ match.player2_ragequit ? 'RQ ' : '' }}{{ match.player2_score }}
+            <span v-if="match.player2_ragequit">RQ </span>
+            <span v-if="match.player2_forfeit">Abandon</span>
+            <span v-else>{{ match.player2_score }}</span>
         </td>
         <td :class="getMatchCssClass(2, match)">{{ match.player2_elo }}</td>
         <td :class="getMatchCssClass(2, match)">{{ match.player2_previous_elo }}</td>
@@ -40,11 +45,18 @@
         <td :class="getMatchCssClass(2, match)" class="character-thumbnail allignr">
           <character-thumbnail :characters="match.character2 || player2.main_character" />
         </td>
-        <td class="borderl">{{ match.updated_at | format }}</td>
-        <td >
-          <v-icon name="edit"
+        <td class="borderl">{{ match.completed_at | format }}</td>
+        <td>
+          <v-icon
+            class="text-success"
+            v-tooltip.right="`Modéré le ${$options.filters.format(match.moderated_at)}`"
+            v-if="match.moderated_at"
+            name="check-square"
+          />
+        </td>
+        <td v-if="isAuth">
+          <v-icon name="edit" @click.native="$emit('open', match.id)"
             class="click"
-            @click.native="$emit('open', match.id)"
           />
         </td>
       </tr>
@@ -64,6 +76,7 @@ export default {
 
   props: {
     matches: Array,
+    isAuth: Boolean,
   },
 
   methods: {
@@ -72,10 +85,14 @@ export default {
         return 'not-completed';
       }
       if (player === 1) {
-        return (match.player2_ragequit || match.player1_score > match.player2_score)
+        return (
+          (match.player2_forfeit || match.player2_ragequit)
+            || match.player1_score > match.player2_score)
           ? 'winner' : 'loser';
       }
-      return (match.player1_ragequit || match.player2_score > match.player1_score)
+      return (
+        (match.player1_forfeit || match.player1_ragequit)
+          || match.player2_score > match.player1_score)
         ? 'winner' : 'loser';
     },
   },
