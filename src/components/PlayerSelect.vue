@@ -27,6 +27,10 @@ export default {
   props: {
     players: Array,
     placeholder: String,
+    selectable: {
+      type: Function,
+      default: () => true,
+    },
   },
 
   data() {
@@ -43,11 +47,13 @@ export default {
 
   computed: {
     options() {
-      return this.players.map((p) => ({
-        label: p.name,
-        code: p.id,
-        mainCharacter: p.main_character,
-      }));
+      return this.players
+        .filter(this.selectable)
+        .map((p) => ({
+          label: p.name,
+          code: p.id,
+          mainCharacter: p.main_character,
+        }));
     },
   },
 

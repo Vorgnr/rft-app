@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
     <h2>Nouveau match</h2>
     <div class="row">
       <div class="col">
@@ -22,24 +23,27 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <label>Player 1</label>
+          <label>Joueur 1</label>
           <player-select
             :players="match.player2_id
               ? players.filter(p => match.player2_id !== p.id)
               : players"
             v-model="match.player1_id"
+            :selectable="player => !player.is_frozen"
             @input="validForm"
           />
+          <small class="form-text text-muted">Le joueur 1 défi le joueur 2 </small>
         </div>
       </div>
       <div class="col">
         <div class="form-group" v-if="match.player1_id">
-          <label>Player 2</label>
+          <label>Joueur 2</label>
           <player-select
             :players="match.player1_id
               ? players.filter(p => match.player1_id !== p.id)
               : players"
             v-model="match.player2_id"
+            :selectable="player => !player.is_frozen"
             @input="validForm"
           />
         </div>
@@ -120,6 +124,7 @@
         </button>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
