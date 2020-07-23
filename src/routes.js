@@ -8,38 +8,49 @@ import Match from './views/Match.vue';
 import Inscription from './views/Inscription.vue';
 import CreateMatch from './views/CreateMatch.vue';
 import Login from './views/Login.vue';
+import Player from './views/Player.vue';
 
 Vue.use(VueRouter);
 
 Vue.config.productionTip = false;
+
+const mustBeAuth = (to, from, next) => {
+  if (store.getters['auth/isAuth']) {
+    next();
+  } else {
+    next({ name: 'login', query: { redirect: to.path } });
+  }
+};
 
 const routes = [
   {
     name: 'login',
     path: '/login',
     component: Login,
-    meta: {
-      mustNotBeAuth: true,
-    },
   },
   { name: 'home', path: '/', component: Leaderboard },
+  {
+    name: 'profile', path: '/profile', component: Player, beforeEnter: mustBeAuth,
+  },
   { name: 'matches', path: '/matches', component: Matches },
   {
     name: 'matches.new',
     path: '/matches/new',
     component: CreateMatch,
-    meta: {
-      mustBeAuth: true,
-    },
+    beforeEnter: mustBeAuth,
   },
   { name: 'inscription', path: '/inscription', component: Inscription },
   {
     path: '/matches/:id',
     name: 'match',
     component: Match,
-    meta: {
-      mustBeAuth: true,
-    },
+    beforeEnter: mustBeAuth,
+  },
+  {
+    path: '/players/:id',
+    name: 'player',
+    component: Player,
+    beforeEnter: mustBeAuth,
   },
 ];
 
@@ -47,19 +58,6 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  const isAuth = store.getters['auth/isAuth'];
-  if (to.meta.mustBeAuth && !isAuth) {
-    next({ name: 'login', query: { redirect: to.path } });
-  }
-
-  if (to.meta.mustNotBeAuth && isAuth) {
-    next({ name: 'home' });
-  } else {
-    next();
-  }
 });
 
 export default router;

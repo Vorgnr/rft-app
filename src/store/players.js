@@ -1,6 +1,7 @@
 import api from '@/lib/api';
 
 const state = {
+  item: null,
   list: [],
   noMoreItems: false,
 };
@@ -16,6 +17,12 @@ const mutations = {
     } else {
       s.noMoreItems = true;
     }
+  },
+  setItem(s, item) {
+    s.item = item;
+  },
+  updateItem(s, item) {
+    s.item = { ...s.item, ...item };
   },
 };
 
@@ -50,11 +57,30 @@ const actions = {
     const response = await callList(obj);
     commit('setList', response.data);
   },
+
+  async update({ commit }, { playerId, body }) {
+    const response = await api
+      .from('players')
+      .put(`/${playerId}`, body);
+
+    commit('updateItem', response.data);
+  },
+
+  async getById({ commit }, { playerId }) {
+    const payload = {
+      method: 'GET',
+    };
+    const response = await api
+      .from(`players/${playerId}`)
+      .request(payload);
+    commit('setItem', response.data);
+  },
 };
 
 const getters = {
   list: (s) => s.list,
   noMoreItems: (s) => s.noMoreItems,
+  item: (s) => s.item,
 };
 
 export default {

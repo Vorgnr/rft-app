@@ -14,6 +14,9 @@
           </router-link>
         </ul>
         <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+          <router-link v-if="isAuth" tag="li" class="nav-item" to="/profile">
+            <a class="nav-link" href="#"><v-icon name="user" /></a>
+          </router-link>
           <router-link v-if="!isAuth" tag="li" class="nav-item" to="/inscription">
             <a class="nav-link" href="#">Inscription</a>
           </router-link>
