@@ -4,17 +4,21 @@
       <router-link tag="a" class="nav-brand" to="/">
         <img width="70" height="28" alt="Vue logo" src="../assets/logo.png" />
       </router-link>
-        <button
-          class="navbar-toggler"
-          type="button"
-          :class="collapsed ? '' : 'collapsed'"
-          @click="collapsed = !collapsed"
-          data-toggle="collapse"
-          aria-controls="mainNavbar"
-          data-target="mainNavbar"
-          aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        :class="collapsed ? '' : 'collapsed'"
+        @click="collapsed = !collapsed"
+        data-toggle="collapse"
+        aria-controls="mainNavbar"
+        data-target="mainNavbar"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
       <div :class="collapsed ? '' : 'show'" class="collapse navbar-collapse" id="mainNavbar">
         <ul class="navbar-nav">
           <router-link tag="li" class="nav-item" to="/matches">
@@ -23,10 +27,10 @@
           <router-link v-if="isAuth" tag="li" class="nav-item" to="/matches/new">
             <a class="nav-link" href="#">Nouveau match</a>
           </router-link>
-        </ul>
-        <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
           <router-link v-if="isAuth" tag="li" class="nav-item" to="/profile">
-            <a class="nav-link" href="#"><v-icon name="user" /></a>
+            <a class="nav-link" href="#">
+              <v-icon name="user" />
+            </a>
           </router-link>
           <router-link v-if="!isAuth" tag="li" class="nav-item" to="/inscription">
             <a class="nav-link" href="#">Inscription</a>
