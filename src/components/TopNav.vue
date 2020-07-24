@@ -4,7 +4,18 @@
       <router-link tag="a" class="nav-brand" to="/">
         <img width="70" height="28" alt="Vue logo" src="../assets/logo.png" />
       </router-link>
-      <div class="collapse navbar-collapse">
+        <button
+          class="navbar-toggler"
+          type="button"
+          :class="collapsed ? '' : 'collapsed'"
+          @click="collapsed = !collapsed"
+          data-toggle="collapse"
+          aria-controls="mainNavbar"
+          data-target="mainNavbar"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      <div :class="collapsed ? '' : 'show'" class="collapse navbar-collapse" id="mainNavbar">
         <ul class="navbar-nav">
           <router-link tag="li" class="nav-item" to="/matches">
             <a class="nav-link" href="#">Matchs</a>
@@ -35,6 +46,12 @@
 <script>
 export default {
   name: 'TopNav',
+
+  data() {
+    return {
+      collapsed: true,
+    };
+  },
 
   props: {
     isAuth: Boolean,

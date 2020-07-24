@@ -42,7 +42,7 @@
           <th>Pseudo</th>
           <th>Matchs</th>
           <th>Points</th>
-          <th>Rang</th>
+          <th>Palier</th>
           <th v-if="isAuth"></th>
         </tr>
       </thead>
