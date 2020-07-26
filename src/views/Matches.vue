@@ -26,8 +26,10 @@
         <div class="form-group">
           <v-select
             :options="[
-              { label: 'Non modéré', code: 'moderatedAt' },
-              { label: 'Non terminé', code: 'completedAt' },
+              { label: 'Non modérés', code: 'moderatedAt', filter: '0' },
+              { label: 'Modérés', code: 'moderatedAt', filter: '1' },
+              { label: 'Non terminés', code: 'completedAt', filter: '0' },
+              { label: 'Terminés', code: 'completedAt', filter: '1' },
             ]"
             v-model="matchStatus"
             @input="onStatusChange"
@@ -141,7 +143,7 @@ export default {
         payload.leagueId = this.currentLeague.code;
       }
       if (this.matchStatus) {
-        payload[this.matchStatus.code] = 'null';
+        payload[this.matchStatus.code] = this.matchStatus.filter;
       }
       try {
         await this.listMatches({ params: payload });
