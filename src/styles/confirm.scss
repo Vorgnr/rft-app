@@ -1,0 +1,28 @@
+.custom-confirm {
+  .vc-container {
+    background-color: #002B36;
+    border-radius: 0.25rem;
+    .vc-text-grid {
+      .vc-text {
+        color: #839496;
+        font-size:1.2rem;
+      }
+    }
+    .vc-btn-grid {
+      border: 1px solid rgba(0,43,54,0.95);
+      border-radius: 0.25rem;
+      .vc-btn {
+        color: #2AA198;
+        background-color: #002B36;
+        border-radius: 0;
+        border-top: 1px solid #839496;
+      }
+      .vc-btn.left {
+        border-right: 1px solid #839496;
+      }
+      .vc-btn:focus {
+        outline: none;
+      }
+    }
+  }
+}

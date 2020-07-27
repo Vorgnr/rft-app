@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <vue-confirm-dialog class="custom-confirm"></vue-confirm-dialog>
     <top-nav @signout="submitSignout" :is-auth="isAuth" v-if="$route.name !== 'login'" />
     <notification />
     <div class="main container">
@@ -10,7 +11,13 @@
         </div>
       </div>
     </div>
-    <app-footer v-if="$route.name !== 'login'" />
+    <app-footer v-if="[
+      'login',
+      'inscription',
+      'profile',
+      'match',
+      'matches.new'
+    ].indexOf($route.name) == -1" />
   </div>
 </template>
 

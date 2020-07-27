@@ -7,11 +7,7 @@
         </router-link>
       </div>
     </div>
-    <div
-      :class="match.match.completed_at ? 'border-primary' : 'border-info'"
-      class="card border-primary mb-3"
-      style="max-width: 40rem;"
-    >
+    <div class="card border-primary mb-3" style="max-width: 40rem;">
       <div class="card-body">
         <h4 class="card-title">
           {{match.player1.name}} Vs {{match.player2.name}}
@@ -59,7 +55,7 @@
     <div>
       <div class="row">
         <div class="col">
-          <div class="card border-info mb-3">
+          <div class="card mb-3">
             <div class="card-header">{{ match.player1.name }}</div>
             <div class="card-body">
               <div class="form-group">
@@ -114,7 +110,7 @@
           </div>
         </div>
         <div class="col">
-          <div class="card border-warning mb-3">
+          <div class="card mb-3">
             <div class="card-header">{{ match.player2.name }}</div>
             <div class="card-body">
               <div class="form-group">
@@ -172,11 +168,11 @@
     </div>
     <div class="row" v-if="matchIsCompleted">
       <div class="col-md-4">
-        <datetime v-model="match.match.completed_at" ></datetime>
+        <datetime v-model="match.match.completed_at"></datetime>
       </div>
     </div>
     <div class="row" v-if="!this.match.match.moderated_at">
-      <div class="col">
+      <div class="col-auto mr-auto">
         <button
           v-if="canUpdate"
           @click="submit"
@@ -187,6 +183,9 @@
           class="btn btn-primary"
           type="button"
         >Valider et distribuer les points</button>
+      </div>
+      <div class="col-auto">
+        <button @click="cancelMatch" class="btn btn-warning">Annuler le match</button>
       </div>
     </div>
   </div>
@@ -250,6 +249,7 @@ export default {
       getById: 'getById',
       update: 'update',
       moderate: 'moderate',
+      cancel: 'cancel',
     }),
     ...mapActions('leagues', {
       listLeagues: 'list',
@@ -307,6 +307,27 @@ export default {
       }
     },
 
+    cancelMatch() {
+      this.$confirm({
+        message: 'Annuler le match ?',
+        button: {
+          no: 'Non',
+          yes: 'Oui',
+        },
+        callback: async (confirm) => {
+          if (confirm) {
+            try {
+              await this.cancel({ matchId: this.$route.params.id });
+              this.notify({ title: 'Match annulé', type: 'success' });
+              this.$router.push({ name: 'matches' });
+            } catch (e) {
+              this.notifyError(e);
+            }
+          }
+        },
+      });
+    },
+
     async submit() {
       try {
         await this.update({
@@ -321,13 +342,24 @@ export default {
     },
 
     async submitModerate() {
-      try {
-        await this.moderate({ matchId: this.$route.params.id });
-        this.notify({ title: 'Match modéré', type: 'success' });
-        this.$router.push({ name: 'matches' });
-      } catch (e) {
-        this.notifyError(e);
-      }
+      this.$confirm({
+        message: 'Modérer le match et distribuer les points ?',
+        button: {
+          no: 'Non',
+          yes: 'Oui',
+        },
+        callback: async (confirm) => {
+          if (confirm) {
+            try {
+              await this.moderate({ matchId: this.$route.params.id });
+              this.notify({ title: 'Match modéré', type: 'success' });
+              this.$router.push({ name: 'matches' });
+            } catch (e) {
+              this.notifyError(e);
+            }
+          }
+        },
+      });
     },
   },
 

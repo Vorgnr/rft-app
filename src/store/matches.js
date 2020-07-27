@@ -56,6 +56,14 @@ const actions = {
     commit('updateItem', response.data);
   },
 
+  async cancel({ commit }, { matchId }) {
+    const response = await api
+      .from('matches')
+      .put(`/${matchId}/cancel`);
+
+    commit('updateItem', response.data);
+  },
+
   async update({ commit }, { matchId, body }) {
     const response = await api
       .from('matches')
