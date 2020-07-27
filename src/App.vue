@@ -10,12 +10,14 @@
         </div>
       </div>
     </div>
+    <app-footer v-if="$route.name !== 'login'" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import TopNav from './components/TopNav.vue';
+import AppFooter from './components/AppFooter.vue';
 import Notification from './components/Notification.vue';
 
 import './styles/main.scss';
@@ -25,6 +27,7 @@ export default {
   components: {
     TopNav,
     Notification,
+    AppFooter,
   },
 
   computed: {

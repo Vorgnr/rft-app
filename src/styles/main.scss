@@ -9,6 +9,10 @@ body {
   padding-top: 70px;
 }
 
+.main {
+  min-height: 77vh;
+}
+
 @media (min-width: 1200px) {
   .container, .container-sm, .container-md, .container-lg, .container-xl {
       max-width: 1298px;

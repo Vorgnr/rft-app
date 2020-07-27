@@ -9,6 +9,7 @@ import Inscription from './views/Inscription.vue';
 import CreateMatch from './views/CreateMatch.vue';
 import Login from './views/Login.vue';
 import Player from './views/Player.vue';
+import Rules from './views/Rules.vue';
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,7 @@ const routes = [
     name: 'profile', path: '/profile', component: Player, beforeEnter: mustBeAuth,
   },
   { name: 'matches', path: '/matches', component: Matches },
+  { name: 'rules', path: '/rules', component: Rules },
   {
     name: 'matches.new',
     path: '/matches/new',
