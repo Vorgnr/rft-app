@@ -19,6 +19,11 @@
         </div>
         <div class="col">
           <p>
+            <a target="_blank" href="https://discord.gg/7Ejf6b3">Discord</a>
+          </p>
+        </div>
+        <div class="col">
+          <p>
             © 2020 Copyright
             <a href="http://ranking-tekken.fr/">
               <strong>RFT</strong>

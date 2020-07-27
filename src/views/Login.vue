@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <div class="col-md-6 offset-md-3">
-        <div class="card border-dark mb-3">
+        <div class="card border-dark mb-3 mt-5">
           <div class="card-header">
             <div class="center">
               <img width="146" height="55" alt="Vue logo" src="../assets/logo.png" />
