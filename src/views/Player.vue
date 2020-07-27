@@ -36,7 +36,7 @@
             </div>
             <div
               v-if="isAdmin" class="custom-control custom-switch"
-              @click="player.is_admin = !player.is_admin">>
+              @click="player.is_admin = !player.is_admin">
               <input type="checkbox" class="custom-control-input" v-model="player.is_admin" />
               <label class="custom-control-label pointer">Administrateur</label>
             </div>

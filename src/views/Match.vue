@@ -28,9 +28,7 @@
           <li
             v-if="match.match.moderated_at"
             class="card-text"
-          >
-            Moderé le {{ match.match.moderated_at | format }}
-          </li>
+          >Moderé le {{ match.match.moderated_at | format }}</li>
         </ul>
       </div>
     </div>
@@ -92,15 +90,13 @@
                     >
                       <span
                         v-if="match.match.player1_forfeit"
-                      >
-                        {{ match.player1.name }} ne s'est pas présenté
-                      </span>
+                      >{{ match.player1.name }} ne s'est pas présenté</span>
                       <span v-if="!match.match.player1_forfeit">Abandon</span>
                     </button>
                   </div>
                 </div>
                 <div class="col">
-                  <div  class="form-group">
+                  <div class="form-group">
                     <button
                       @click="toogleRageQuit(1)"
                       class="btn"
@@ -108,9 +104,7 @@
                     >
                       <span
                         v-if="match.match.player1_ragequit"
-                      >
-                        {{ match.player1.name }} à quitté le match
-                      </span>
+                      >{{ match.player1.name }} à quitté le match</span>
                       <span v-if="!match.match.player1_ragequit">RQ</span>
                     </button>
                   </div>
@@ -151,15 +145,13 @@
                     >
                       <span
                         v-if="match.match.player2_forfeit"
-                      >
-                        {{ match.player2.name }} ne s'est pas présenté
-                      </span>
+                      >{{ match.player2.name }} ne s'est pas présenté</span>
                       <span v-if="!match.match.player2_forfeit">Abandon</span>
                     </button>
                   </div>
                 </div>
                 <div class="col">
-                  <div  class="form-group">
+                  <div class="form-group">
                     <button
                       @click="toogleRageQuit(2)"
                       class="btn"
@@ -167,9 +159,7 @@
                     >
                       <span
                         v-if="match.match.player2_ragequit"
-                      >
-                        {{ match.player2.name }} à quitté le match
-                      </span>
+                      >{{ match.player2.name }} à quitté le match</span>
                       <span v-if="!match.match.player2_ragequit">RQ</span>
                     </button>
                   </div>
@@ -180,18 +170,23 @@
         </div>
       </div>
     </div>
+    <div class="row" v-if="matchIsCompleted">
+      <div class="col-md-4">
+        <datetime v-model="match.match.completed_at" ></datetime>
+      </div>
+    </div>
     <div class="row" v-if="!this.match.match.moderated_at">
       <div class="col">
         <button
           v-if="canUpdate"
           @click="submit"
-          class="btn btn-primary"
-          type="button">Mettre à jour</button>
+          class="btn btn-primary" type="button">Mettre à jour</button>
         <button
           v-if="canModerate"
           @click="submitModerate"
           class="btn btn-primary"
-          type="button">Valider et distribuer les points</button>
+          type="button"
+        >Valider et distribuer les points</button>
       </div>
     </div>
   </div>
@@ -206,6 +201,14 @@ export default {
   name: 'Match',
 
   components: { vSelect, CharacterSelect },
+
+  data() {
+    return {
+      completed_at_date: null,
+      completed_at_hour: null,
+      completed_at_minute: null,
+    };
+  },
 
   computed: {
     ...mapGetters('matches', {
@@ -224,22 +227,21 @@ export default {
     },
 
     canModerate() {
-      return this.matchIsCompleted && !this.match.match.moderated_at && this.isAdmin;
+      return (
+        this.matchIsCompleted && !this.match.match.moderated_at && this.isAdmin
+      );
     },
 
     canUpdate() {
-      if (!this.matchIsCompleted) {
-        return false;
-      }
-
       if (this.isAdmin) {
         return true;
       }
 
-      return [
-        this.match.match.player1_id,
-        this.match.match.player2_id,
-      ].indexOf(this.authPlayer.id) > -1;
+      return (
+        [this.match.match.player1_id, this.match.match.player2_id].indexOf(
+          this.authPlayer.id,
+        ) > -1
+      );
     },
   },
 
@@ -307,7 +309,10 @@ export default {
 
     async submit() {
       try {
-        await this.update({ matchId: this.$route.params.id, body: this.match.match });
+        await this.update({
+          matchId: this.$route.params.id,
+          body: this.match.match,
+        });
         this.notify({ title: 'Match mis à jour', type: 'success' });
         this.$router.push({ name: 'matches' });
       } catch (e) {
