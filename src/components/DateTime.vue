@@ -63,7 +63,6 @@ export default {
 
   data() {
     const dt = new Date(this.value);
-    console.log(format(dt, 'yyyy-MM-dd'));
     return {
       d_date: format(dt, 'yyyy-MM-dd'),
       d_minutes: dt.getMinutes(),
