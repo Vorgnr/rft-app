@@ -6,8 +6,15 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-md-3 offset-md-3 mt-4">
+        <a href="#" @click="$router.go(-1)">
+          <v-icon name="arrow-left" />Retour
+        </a>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-md-6 offset-md-3">
-        <div class="card border-dark mb-3 mt-5">
+        <div class="card border-dark mb-3 mt-3">
           <div class="card-header">
             <div class="center">
               <img width="146" height="55" alt="Vue logo" src="../assets/logo.png" />
@@ -40,9 +47,13 @@
               type="button"
               class="btn btn-outline-secondary btn-lg btn-block"
             >
-            <span v-if="loading"
-              class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            <span>Me connecter</span>
+              <span
+                v-if="loading"
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              <span>Me connecter</span>
             </button>
           </div>
         </div>
@@ -50,7 +61,11 @@
     </div>
     <div class="row">
       <div class="col-md-3 offset-md-3">
-        <router-link tag="a" to="/" class="center">Retour</router-link>
+        <router-link
+          tag="a"
+          to="/forgotten-password"
+          class="center">
+        Mot de passe oublié</router-link>
       </div>
       <div class="col-md-3">
         <router-link class="center" tag="a" to="/inscription">Inscription</router-link>

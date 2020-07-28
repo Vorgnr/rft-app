@@ -87,7 +87,7 @@
                       <span
                         v-if="match.match.player1_forfeit"
                       >{{ match.player1.name }} ne s'est pas présenté</span>
-                      <span v-if="!match.match.player1_forfeit">Abandon</span>
+                      <span v-if="!match.match.player1_forfeit">Non effectué</span>
                     </button>
                   </div>
                 </div>
@@ -142,7 +142,7 @@
                       <span
                         v-if="match.match.player2_forfeit"
                       >{{ match.player2.name }} ne s'est pas présenté</span>
-                      <span v-if="!match.match.player2_forfeit">Abandon</span>
+                      <span v-if="!match.match.player2_forfeit">Non effectué</span>
                     </button>
                   </div>
                 </div>

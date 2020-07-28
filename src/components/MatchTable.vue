@@ -29,14 +29,14 @@
         <td :class="getMatchCssClass(1, match)">{{ match.player1_elo }}</td>
         <td :class="getMatchCssClass(1, match)">
           <span v-if="match.player1_ragequit"> RQ</span>
-          <span v-if="match.player1_forfeit">Abandon</span>
+          <span v-if="match.player1_forfeit">Non effectué</span>
           <span v-else>{{ match.player1_score }}</span>
         </td>
         <td
           class="borderl allignr"
           :class="getMatchCssClass(2, match)">
             <span v-if="match.player2_ragequit">RQ </span>
-            <span v-if="match.player2_forfeit">Abandon</span>
+            <span v-if="match.player2_forfeit">Non effectué</span>
             <span v-else>{{ match.player2_score }}</span>
         </td>
         <td :class="getMatchCssClass(2, match)">{{ match.player2_elo }}</td>

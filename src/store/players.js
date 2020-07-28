@@ -75,6 +75,18 @@ const actions = {
       .request(payload);
     commit('setItem', response.data);
   },
+
+  async requestPasswordRecover(_, email) {
+    return api
+      .from('players')
+      .post('/recover-password-request', { email });
+  },
+
+  async recoverPassword(_, body) {
+    return api
+      .from('players')
+      .post('/recover-password', body);
+  },
 };
 
 const getters = {

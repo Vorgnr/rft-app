@@ -11,6 +11,7 @@ const actions = {
       commit('setError', err);
     }
   },
+
   async signout({ commit }) {
     try {
       await api
@@ -21,6 +22,7 @@ const actions = {
       commit('setError', err);
     }
   },
+
   async getSession({ commit, state }) {
     if (!state.isAuth) {
       const request = await api

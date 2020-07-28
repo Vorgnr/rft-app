@@ -1,7 +1,13 @@
 <template>
   <div id="app">
     <vue-confirm-dialog class="custom-confirm"></vue-confirm-dialog>
-    <top-nav @signout="submitSignout" :is-auth="isAuth" v-if="$route.name !== 'login'" />
+    <top-nav @signout="submitSignout" :is-auth="isAuth"
+      v-if="[
+      'login',
+      'forgotten-password',
+      'password-recover'
+    ].indexOf($route.name) == -1"
+    />
     <notification />
     <div class="main container">
       <router-view v-if="!loading" />
@@ -16,7 +22,9 @@
       'inscription',
       'profile',
       'match',
-      'matches.new'
+      'matches.new',
+      'forgotten-password',
+      'password-recover'
     ].indexOf($route.name) == -1" />
   </div>
 </template>

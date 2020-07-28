@@ -1,0 +1,70 @@
+<template>
+  <div>
+    <div class="row">
+      <div class="col-md-2 offset-md-2">
+        <a href="#" @click="$router.go(-1)">
+          <v-icon name="arrow-left" />Retour
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5 offset-md-2  mt-4">
+        <h2>Mot de passe oublié</h2>
+        <form>
+          <fieldset>
+            <div class="form-group">
+              <label for="name">Email</label>
+              <input
+                class="form-control"
+                v-model="email"
+                type="text"
+                placeholder="Email"
+              />
+            </div>
+          </fieldset>
+          <button
+            v-if="email"
+            @click="submit"
+            class="btn btn-primary mt-3"
+            type="button"
+            > Réinitialiser le mot de passe </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapActions } from 'vuex';
+
+export default {
+  name: 'ForgottenPassword',
+
+  data() {
+    return {
+      email: null,
+    };
+  },
+
+  methods: {
+    ...mapActions('players', {
+      requestPasswordRecover: 'requestPasswordRecover',
+    }),
+
+    ...mapActions('notifications', {
+      notify: 'add',
+      notifyError: 'addError',
+    }),
+
+    async submit() {
+      try {
+        await this.requestPasswordRecover(this.email);
+        this.notify({ title: 'Demande de réinitialisation faite', type: 'success' });
+        this.$router.push({ name: 'home' });
+      } catch (e) {
+        this.notifyError(e);
+      }
+    },
+  },
+};
+</script>
