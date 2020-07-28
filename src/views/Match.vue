@@ -167,11 +167,15 @@
       </div>
     </div>
     <div class="row" v-if="matchIsCompleted">
-      <div class="col-md-4">
-        <datetime v-model="match.match.completed_at"></datetime>
+      <div class="col-md-6">
+        <date-time
+          :value="match.match.completed_at"
+          title="Terminé le"
+          @input="formatCompletedAtDate"
+        />
       </div>
     </div>
-    <div class="row" v-if="!this.match.match.moderated_at">
+    <div class="row">
       <div class="col-auto mr-auto">
         <button
           v-if="canUpdate"
@@ -184,7 +188,7 @@
           type="button"
         >Valider et distribuer les points</button>
       </div>
-      <div class="col-auto">
+      <div class="col-auto" v-if="!this.match.match.moderated_at">
         <button @click="cancelMatch" class="btn btn-warning">Annuler le match</button>
       </div>
     </div>
@@ -195,11 +199,12 @@
 import vSelect from 'vue-select';
 import { mapActions, mapGetters } from 'vuex';
 import CharacterSelect from '../components/CharacterSelect.vue';
+import DateTime from '../components/DateTime.vue';
 
 export default {
   name: 'Match',
 
-  components: { vSelect, CharacterSelect },
+  components: { vSelect, CharacterSelect, DateTime },
 
   data() {
     return {
@@ -307,6 +312,10 @@ export default {
       }
     },
 
+    formatCompletedAtDate(date) {
+      this.match.match.completed_at = date;
+    },
+
     cancelMatch() {
       this.$confirm({
         message: 'Annuler le match ?',
@@ -329,6 +338,12 @@ export default {
     },
 
     async submit() {
+      if (this.match.match.completed_at) {
+        this.match
+          .match.completed_at = this.$options
+            .filters.formatForServer(this.match.match.completed_at);
+      }
+
       try {
         await this.update({
           matchId: this.$route.params.id,
