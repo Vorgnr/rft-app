@@ -9,7 +9,7 @@
     </div>
     <div class="row">
       <div class="col-md-5 offset-md-2  mt-4">
-        <h2>Mot de passe oublié</h2>
+        <h1>Mot de passe oublié</h1>
         <form>
           <fieldset>
             <div class="form-group">

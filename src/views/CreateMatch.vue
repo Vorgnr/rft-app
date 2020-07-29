@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-10 offset-md-1">
-    <h2>Nouveau match</h2>
+    <h1>Nouveau match</h1>
     <div class="row">
       <div class="col">
         <div class="form-group">

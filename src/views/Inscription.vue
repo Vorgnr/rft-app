@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-6 offset-md-2">
-    <h2>Nouveau joueur</h2>
+    <h1>Nouveau joueur</h1>
       <form>
         <fieldset>
           <div class="form-group">

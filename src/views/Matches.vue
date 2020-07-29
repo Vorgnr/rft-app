@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Matchs</h2>
+    <h1>Matchs</h1>
     <div class="row">
       <div class="col">
         <div class="form-group">

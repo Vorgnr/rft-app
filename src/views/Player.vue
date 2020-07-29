@@ -1,7 +1,7 @@
 <template>
   <div class="row" v-if="player">
     <div class="col-md-6 offset-md-2">
-      <h2>{{title}}</h2>
+      <h1>{{title}}</h1>
       <form>
         <fieldset>
           <div class="form-group">

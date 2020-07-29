@@ -11,7 +11,7 @@
     </div>
     <div class="row">
       <div class="col-md-5 offset-md-2  mt-4">
-        <h2>Changement de mot de passe</h2>
+        <h1>Changement de mot de passe</h1>
         <form>
           <fieldset>
           <div class="form-group">
