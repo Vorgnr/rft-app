@@ -59,6 +59,7 @@ import CharacterSelect from '../components/CharacterSelect.vue';
 
 export default {
   name: 'Player',
+  title: 'Joueur',
   components: { CharacterSelect },
 
   computed: {

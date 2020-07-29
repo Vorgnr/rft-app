@@ -48,6 +48,7 @@ import { mapActions } from 'vuex';
 
 export default {
   name: 'PasswordRecover',
+  title: 'Réinitialisation du mot de passe',
 
   data() {
     return {

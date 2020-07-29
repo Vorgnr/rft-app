@@ -39,6 +39,7 @@ import { mapActions } from 'vuex';
 
 export default {
   name: 'ForgottenPassword',
+  title: 'Mot de passe oublié',
 
   data() {
     return {

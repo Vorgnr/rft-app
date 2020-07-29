@@ -136,6 +136,7 @@ import CharacterSelect from '../components/CharacterSelect.vue';
 
 export default {
   name: 'CreateMatch',
+  title: 'Nouveau match',
   components: { vSelect, PlayerSelect, CharacterSelect },
 
   data() {

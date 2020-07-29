@@ -103,5 +103,6 @@
 <script>
 export default {
   name: 'Rules',
+  title: 'Règles',
 };
 </script>

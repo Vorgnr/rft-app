@@ -203,6 +203,7 @@ import DateTime from '../components/DateTime.vue';
 
 export default {
   name: 'Match',
+  title: 'Match',
 
   components: { vSelect, CharacterSelect, DateTime },
 

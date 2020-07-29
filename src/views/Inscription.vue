@@ -72,6 +72,7 @@ import CharacterSelect from '../components/CharacterSelect.vue';
 
 export default {
   name: 'Inscription',
+  title: 'Inscription',
   components: {
     CharacterSelect,
   },
