@@ -19,7 +19,7 @@
         </div>
         <div class="col">
           <p>
-            <a target="_blank" href="https://discord.gg/7Ejf6b3">Discord</a>
+            <a target="_blank" href="https://discord.gg/7Ejf6b3" rel="noopener">Discord</a>
           </p>
         </div>
         <div class="col">
