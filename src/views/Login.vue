@@ -17,7 +17,7 @@
         <div class="card border-dark mb-3 mt-3">
           <div class="card-header">
             <div class="center">
-              <img width="146" height="55" alt="Vue logo" src="../assets/logo.png" />
+              <img width="146" height="55" alt="Vue logo" src="@/assets/logo.png" />
             </div>
           </div>
           <div class="card-body">

@@ -2,7 +2,7 @@
   <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
     <div class="container">
       <router-link tag="a" class="nav-brand" to="/">
-        <img width="70" height="28" alt="Vue logo" src="../assets/logo.png" />
+        <img width="70" height="28" alt="Vue logo" src="@/assets/logo.png" />
       </router-link>
 
       <button
