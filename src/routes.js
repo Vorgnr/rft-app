@@ -83,11 +83,9 @@ const routes = [
     beforeEnter: mustBeAuth,
   },
   {
-    path: '/admin',
+    path: '/admin/leagues',
     beforeEnter: mustBeAdmin,
-    children: [
-      { path: '/leagues', component: () => import('@/views/admin/Leagues.vue') },
-    ],
+    component: () => import('@/views/admin/Leagues.vue'),
   },
   {
     path: '*',

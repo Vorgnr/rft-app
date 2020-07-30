@@ -2,7 +2,6 @@ import api from '@/lib/api';
 
 const mutations = {
   setList(s, list) {
-    s.isLazy = true;
     s.list = list;
     const [currentLeague] = list;
     if (currentLeague) {
@@ -13,24 +12,42 @@ const mutations = {
       };
     }
   },
+
+  updateItem(s, league) {
+    const list = s.list.map((l) => {
+      if (l.id === league.id) {
+        return { ...l, ...league, isUpdated: false };
+      }
+      return l;
+    });
+    s.list = list;
+  },
+
   setCurrentLeague(s, selectedLeague) {
     s.currentSelectedLeague = selectedLeague;
   },
 };
 
 const actions = {
-  async list({ commit, state }) {
+  async list({ commit }, params = {}) {
     const payload = {
       method: 'GET',
+      params,
     };
 
-    if (!state.isLazy) {
-      const response = await api
-        .from('leagues')
-        .request(payload);
+    const response = await api
+      .from('leagues')
+      .request(payload);
 
-      commit('setList', response.data);
-    }
+    commit('setList', response.data);
+  },
+
+  async update({ commit }, { leagueId, body }) {
+    const response = await api
+      .from('leagues')
+      .put(`/${leagueId}`, body);
+
+    commit('updateItem', response.data);
   },
 
   setCurrentLeague({ commit }, selectedLeague) {

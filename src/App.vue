@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <vue-confirm-dialog class="custom-confirm"></vue-confirm-dialog>
-    <top-nav @signout="submitSignout" :is-auth="isAuth"
+    <top-nav @signout="submitSignout" :is-auth="isAuth" :is-admin="isAdmin"
       v-if="[
       'login',
       'forgotten-password',
@@ -48,6 +48,7 @@ export default {
   computed: {
     ...mapGetters('auth', {
       isAuth: 'isAuth',
+      isAdmin: 'isAdmin',
       loading: 'loading',
     }),
   },

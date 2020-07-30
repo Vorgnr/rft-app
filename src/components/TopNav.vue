@@ -27,6 +27,10 @@
           <router-link v-if="isAuth" tag="li" class="nav-item" to="/matches/new">
             <a class="nav-link" href="#">Nouveau match</a>
           </router-link>
+          <router-link v-if="isAdmin" tag="li" class="nav-item" to="/admin/leagues">
+            <a class="nav-link" href="#">Leagues</a>
+          </router-link>
+
           <router-link v-if="isAuth" tag="li" class="nav-item" to="/profile">
             <a class="nav-link" href="#">
               <v-icon name="user" />
@@ -59,6 +63,7 @@ export default {
 
   props: {
     isAuth: Boolean,
+    isAdmin: Boolean,
   },
 };
 </script>
