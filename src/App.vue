@@ -60,12 +60,10 @@ export default {
 
     async submitSignout() {
       await this.signout();
-      this.$router.push({ name: 'home' });
+      if (this.$route.name !== 'home') {
+        this.$router.push({ name: 'home' });
+      }
     },
-  },
-
-  async created() {
-    await this.getSession();
   },
 };
 </script>

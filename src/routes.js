@@ -74,4 +74,9 @@ const router = new VueRouter({
   routes,
 });
 
+router.beforeEach(async (to, from, next) => {
+  await store.dispatch('auth/getSession');
+  next();
+});
+
 export default router;
