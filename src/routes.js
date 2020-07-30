@@ -2,17 +2,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '@/store';
 
-import Leaderboard from './views/Leaderboard.vue';
-import Matches from './views/Matches.vue';
-import Match from './views/Match.vue';
-import Inscription from './views/Inscription.vue';
-import CreateMatch from './views/CreateMatch.vue';
-import Login from './views/Login.vue';
-import Player from './views/Player.vue';
-import Rules from './views/Rules.vue';
-import ForgottenPassword from './views/ForgottenPassword.vue';
-import PasswordRecover from './views/PasswordRecover.vue';
-
 Vue.use(VueRouter);
 
 Vue.config.productionTip = false;
@@ -29,41 +18,41 @@ const routes = [
   {
     name: 'login',
     path: '/login',
-    component: Login,
+    component: import('@/src/views/Login.vue'),
   },
-  { name: 'home', path: '/', component: Leaderboard },
+  { name: 'home', path: '/', component: import('@/src/views/Leaderboard.vue') },
   {
-    name: 'profile', path: '/profile', component: Player, beforeEnter: mustBeAuth,
+    name: 'profile', path: '/profile', component: import('@/src/views/Player.vue'), beforeEnter: mustBeAuth,
   },
-  { name: 'matches', path: '/matches', component: Matches },
-  { name: 'rules', path: '/rules', component: Rules },
+  { name: 'matches', path: '/matches', component: import('@/src/views/Matches.vue') },
+  { name: 'rules', path: '/rules', component: import('@/src/views/Rules.vue') },
   {
     name: 'forgotten-password',
     path: '/forgotten-password',
-    component: ForgottenPassword,
+    component: import('@/src/views/ForgottenPassword.vue'),
   },
   {
     name: 'password-recover',
     path: '/password-recover/:token',
-    component: PasswordRecover,
+    component: import('@/src/views/PasswordRecover.vue'),
   },
   {
     name: 'matches.new',
     path: '/matches/new',
-    component: CreateMatch,
+    component: import('@/src/views/CreateMatch.vue'),
     beforeEnter: mustBeAuth,
   },
-  { name: 'inscription', path: '/inscription', component: Inscription },
+  { name: 'inscription', path: '/inscription', component: import('@/src/views/Inscription.vue') },
   {
     path: '/matches/:id',
     name: 'match',
-    component: Match,
+    component: import('@/src/views/Match.vue'),
     beforeEnter: mustBeAuth,
   },
   {
     path: '/players/:id',
     name: 'player',
-    component: Player,
+    component: import('@/src/views/Player.vue'),
     beforeEnter: mustBeAuth,
   },
 ];
