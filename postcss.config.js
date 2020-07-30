@@ -11,7 +11,7 @@ module.exports = {
         return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || [];
       },
       whitelist: [],
-      whitelistPatterns: ['vs--'],
+      whitelistPatterns: [/vs(__|--).*/, /v-select/],
     }),
   ],
 };
