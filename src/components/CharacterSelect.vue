@@ -45,6 +45,7 @@ const characters = [
   'katarina',
   'kazumi',
   'kazuya',
+  'king',
   'lars',
   'law',
   'lee',
