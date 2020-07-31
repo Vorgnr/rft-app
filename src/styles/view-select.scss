@@ -50,3 +50,7 @@ $vs-dropdown-bg: #A9BDBD;
 .vs__no-options {
   color:rgb(73, 80, 87);
 }
+
+.vs__selected-options {
+  flex-wrap: unset !important;
+}

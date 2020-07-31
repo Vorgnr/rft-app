@@ -23,6 +23,10 @@ const mutations = {
     s.list = list;
   },
 
+  appendList(s, league) {
+    s.list.push(league);
+  },
+
   setCurrentLeague(s, selectedLeague) {
     s.currentSelectedLeague = selectedLeague;
   },
@@ -40,6 +44,14 @@ const actions = {
       .request(payload);
 
     commit('setList', response.data);
+  },
+
+  async create({ commit }, { body }) {
+    const response = await api
+      .from('leagues')
+      .post('/', body);
+
+    commit('appendList', response.data);
   },
 
   async update({ commit }, { leagueId, body }) {

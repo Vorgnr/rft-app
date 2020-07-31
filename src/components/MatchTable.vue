@@ -1,5 +1,5 @@
 <template>
-  <table class="table table-hover">
+  <table class="table table-hover table-condensed">
     <thead>
       <tr>
         <th>Player 1</th>
