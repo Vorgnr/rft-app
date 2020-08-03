@@ -58,8 +58,13 @@
           <td>{{ elo.played_matches }}</td>
           <td>{{ elo.value }}</td>
           <td>{{ getRank(elo.value) }}</td>
-          <td v-if="isAuth">
-            <v-icon name="edit" @click.native="open(player.id)" class="click" />
+          <td>
+            <router-link tag="a" :to="`/chart/${player.id}`" class="mr-3">
+              <v-icon name="bar-chart-2" />
+            </router-link>
+                        <router-link v-if="isAuth" tag="a" :to="`/players/${player.id}`">
+              <v-icon name="edit" />
+            </router-link>
           </td>
         </tr>
       </tbody>

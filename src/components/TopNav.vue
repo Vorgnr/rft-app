@@ -36,6 +36,11 @@
               <v-icon name="user" />
             </a>
           </router-link>
+          <router-link v-if="isAuth" tag="li" class="nav-item" to="/my-chart">
+            <a class="nav-link" href="#">
+              <v-icon name="bar-chart-2" />
+            </a>
+          </router-link>
           <router-link v-if="!isAuth" tag="li" class="nav-item" to="/inscription">
             <a class="nav-link" href="#">Inscription</a>
           </router-link>

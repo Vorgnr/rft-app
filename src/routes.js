@@ -83,6 +83,17 @@ const routes = [
     beforeEnter: mustBeAuth,
   },
   {
+    path: '/my-chart',
+    name: 'my-chart',
+    component: () => import('@/views/Chart.vue'),
+    beforeEnter: mustBeAuth,
+  },
+  {
+    path: '/chart/:id',
+    name: 'chart',
+    component: () => import('@/views/Chart.vue'),
+  },
+  {
     path: '/admin/leagues',
     beforeEnter: mustBeAdmin,
     component: () => import('@/views/admin/Leagues.vue'),
