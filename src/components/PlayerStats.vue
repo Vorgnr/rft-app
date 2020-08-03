@@ -3,19 +3,19 @@
     <div class="col-md-4 col-12">
       <div class="jumbotron jumbotron-small first text-primary">
         <h2>{{ total }} Matchs</h2>
-        <p>Points: {{ elo }} </p>
+        <p v-if="elo => 0">Points: {{ elo }} </p>
       </div>
     </div>
     <div class="col-md-4 col-12">
       <div class="jumbotron jumbotron-small text-success">
         <h2 class="">{{ win }} Victoires</h2>
-        <p>{{ ((win / total) * 100).toFixed(2) }} %</p>
+        <p v-if="total">{{ ((win / total) * 100).toFixed(2) }} %</p>
       </div>
     </div>
     <div class="col-md-4 col-12">
       <div class="jumbotron jumbotron-small text-danger">
         <h2>{{ loose }} Défaites</h2>
-        <p>{{ ((loose / total) * 100).toFixed(2) }} %</p>
+        <p v-if="total">{{ ((loose / total) * 100).toFixed(2) }} %</p>
       </div>
     </div>
   </div>

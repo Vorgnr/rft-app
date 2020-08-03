@@ -111,8 +111,11 @@ export default {
 
     playerElo() {
       const matches = this.matchesData;
-      const { previousElo, elo } = this.matchesData[matches.length - 1];
-      return previousElo + elo;
+      if (matches.length) {
+        const { previousElo, elo } = this.matchesData[matches.length - 1];
+        return previousElo + elo;
+      }
+      return 0;
     },
 
     matchesData() {
