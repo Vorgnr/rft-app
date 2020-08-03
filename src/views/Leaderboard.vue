@@ -129,12 +129,12 @@ export default {
     }),
 
     getRank(eloValue) {
-      if (eloValue === null) {
+      if (!this.currentSelectedLeague) {
         return null;
       }
 
-      if (!this.currentSelectedLeague) {
-        return null;
+      if (eloValue === null) {
+        return -1;
       }
 
       return Math.floor(eloValue / this.currentSelectedLeague.rankTreshold);
