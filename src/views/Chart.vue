@@ -29,6 +29,10 @@ import vSelect from 'vue-select';
 import LineChart from '@/components/LineChart.vue';
 import PlayerStats from '@/components/PlayerStats.vue';
 
+const WIN_COLOR = '#2AA198';
+const LOOSE_COLOR = '#D33682';
+const TEXT_COLOR = '#839496';
+
 export default {
   name: 'Matches',
   title: 'Matchs',
@@ -71,6 +75,11 @@ export default {
       return {
         responsive: true,
         maintainAspectRatio: false,
+        legend: {
+          labels: {
+            fontColor: TEXT_COLOR,
+          },
+        },
         elements: {
           line: {
             tension: 0,
@@ -98,6 +107,14 @@ export default {
               const { index } = item;
               const { player1, player2 } = data.datasets[0].data[index];
               return `${player1} vs ${player2}`;
+            },
+            beforeLabel(item, data) {
+              const { index } = item;
+              const { player1Score, player2Score } = data.datasets[0].data[index];
+              if (player1Score) {
+                return `${player1Score} - ${player2Score}`;
+              }
+              return '';
             },
             afterLabel(item, data) {
               const { index } = item;
@@ -148,6 +165,8 @@ export default {
             y,
             isLost,
             player1: player1.name,
+            player1Score: match.player1_score,
+            player2Score: match.player2_score,
             player2: player2.name,
             label,
             previousElo,
@@ -158,14 +177,16 @@ export default {
     },
 
     chartData() {
+      const colors = this.matchesData.map((m) => (m.isLost ? LOOSE_COLOR : WIN_COLOR));
       return {
         datasets: [
           {
             label: `Matchs de ${this.player.name}`,
-            borderColor: '#B58900',
-            backgroundColor: '#B58900',
+            borderColor: TEXT_COLOR,
             fill: false,
             data: this.matchesData,
+            pointBackgroundColor: colors,
+            pointBorderColor: colors,
           },
         ],
       };
