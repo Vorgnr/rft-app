@@ -133,9 +133,10 @@ export default {
     },
 
     async getMatches(params = {}) {
+      this.page = 1;
       const payload = params;
       payload.perPage = this.perPage;
-      payload.page = 1;
+      payload.page = this.page;
       if (!params.name && this.search) {
         payload.name = this.search;
       }

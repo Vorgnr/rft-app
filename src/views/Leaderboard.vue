@@ -162,6 +162,7 @@ export default {
             perPage: this.perPage,
           },
         });
+        this.page = 1;
       } catch (e) {
         this.notifyError(e);
       }
