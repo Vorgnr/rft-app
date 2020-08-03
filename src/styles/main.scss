@@ -9,11 +9,11 @@
 @import './table.scss';
 
 body {
-  padding-top: 8vh;
+  padding-top: 9vh;
 }
 
 .main {
-  min-height: 92vh;
+  min-height: 91vh;
 }
 
 @media (min-width: 1200px) {
@@ -54,4 +54,8 @@ th.borderl {
 
 .pointer {
   cursor: pointer;
+}
+
+.jumbotron-small {
+  padding: 1.7em 2em
 }
