@@ -97,18 +97,22 @@ export default {
           ],
         },
         tooltips: {
+          displayColors: false,
           callbacks: {
-            title(items, data) {
+            title() {
+              return '';
+            },
+            footer(items, data) {
               const { index } = items[0];
               const { completedAt } = data.datasets[0].data[index];
               return completedAt;
             },
-            label(item, data) {
+            beforeLabel(item, data) {
               const { index } = item;
               const { player1, player2 } = data.datasets[0].data[index];
               return `${player1} vs ${player2}`;
             },
-            beforeLabel(item, data) {
+            label(item, data) {
               const { index } = item;
               const { player1Score, player2Score } = data.datasets[0].data[index];
               if (player1Score) {
@@ -120,6 +124,10 @@ export default {
               const { index } = item;
               const { label } = data.datasets[0].data[index];
               return label;
+            },
+            labelTextColor: (item) => {
+              const { index } = item;
+              return this.chartColors[index];
             },
           },
         },
@@ -171,13 +179,17 @@ export default {
             label,
             previousElo,
             elo,
-            completedAt: this.$options.filters.format(dt),
+            completedAt: this.$options.filters.formatPrettier(dt),
           };
         });
     },
 
+    chartColors() {
+      return this.matchesData.map((m) => (m.isLost ? LOOSE_COLOR : WIN_COLOR));
+    },
+
     chartData() {
-      const colors = this.matchesData.map((m) => (m.isLost ? LOOSE_COLOR : WIN_COLOR));
+      const colors = this.chartColors;
       return {
         datasets: [
           {
