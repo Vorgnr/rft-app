@@ -15,7 +15,12 @@
     </div>
     <div v-if="matches.length" class="row">
       <div class="col">
-        <line-chart :chart-data="chartData" :options="chartOptions" :styles="{ height: '24em' }" />
+        <line-chart
+          @on-click-point="onDotClick"
+          :chart-data="chartData"
+          :options="chartOptions"
+          :styles="{ height: '24em' }"
+        />
       </div>
     </div>
     <player-stats class="mt-3" v-bind="playerStats" :elo="playerElo" />
@@ -57,6 +62,7 @@ export default {
       matches: 'list',
     }),
     ...mapGetters('auth', {
+      isAuth: 'isAuth',
       authPlayer: 'player',
     }),
 
@@ -75,6 +81,15 @@ export default {
       return {
         responsive: true,
         maintainAspectRatio: false,
+        hover: {
+          onHover: (e, item) => {
+            if (item.length) {
+              e.target.style.cursor = 'pointer';
+            } else {
+              e.target.style.cursor = 'default';
+            }
+          },
+        },
         legend: {
           labels: {
             fontColor: TEXT_COLOR,
@@ -235,6 +250,13 @@ export default {
     ...mapActions('matches', {
       listMatches: 'list',
     }),
+
+    onDotClick({ index }) {
+      if (this.isAuth) {
+        const { match } = this.matches[index];
+        this.$router.push({ name: 'match', params: { id: match.id } });
+      }
+    },
 
     async onSelectedLeagueChanged(league) {
       this.selectedLeague = league;

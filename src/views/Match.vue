@@ -2,9 +2,9 @@
   <div v-if="match.match">
     <div class="row mb-3">
       <div class="col">
-        <router-link tag="a" to="/matches">
+        <a href="#" @click="$router.go(-1)">
           <v-icon name="arrow-left" />Retour
-        </router-link>
+        </a>
       </div>
     </div>
     <div class="card border-primary mb-3" style="max-width: 40rem;">

@@ -197,10 +197,6 @@ export default {
         this.notifyError(e);
       }
     },
-
-    open(id) {
-      this.$router.push({ name: 'player', params: { id } });
-    },
   },
 
   async mounted() {
