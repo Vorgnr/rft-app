@@ -174,13 +174,27 @@
           @input="formatCompletedAtDate"
         />
       </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="name">Lien Youtube</label>
+          <input
+            class="form-control"
+            type="text"
+            :placeholder="`Lien Youtube`"
+            v-model="match.match.video"
+          />
+        </div>
+      </div>
     </div>
     <div class="row">
       <div class="col-auto mr-auto">
         <button
           v-if="canUpdate"
           @click="submit"
-          class="btn btn-primary" type="button">Mettre à jour</button>
+          class="btn btn-primary"
+          type="button">
+          Mettre à jour
+        </button>
         <button
           v-if="canModerate"
           @click="submitModerate"
@@ -340,9 +354,9 @@ export default {
 
     async submit() {
       if (this.match.match.completed_at) {
-        this.match
-          .match.completed_at = this.$options
-            .filters.formatForServer(this.match.match.completed_at);
+        this.match.match.completed_at = this.$options.filters.formatForServer(
+          this.match.match.completed_at,
+        );
       }
 
       try {
