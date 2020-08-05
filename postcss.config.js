@@ -1,10 +1,8 @@
 const purgecss = require('@fullhuman/postcss-purgecss');
 
-const IN_PRODUCTION = process.env.NODE_ENV === 'production';
-
 module.exports = {
   plugins: [
-    IN_PRODUCTION && purgecss({
+    purgecss({
       content: ['./public/**/*.html', './src/**/*.vue'],
       defaultExtractor(content) {
         const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '');
