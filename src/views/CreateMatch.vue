@@ -1,6 +1,14 @@
 <template>
+<div>
+    <div class="row">
+      <div class="col-md-2 offset-md-1 mt-2">
+        <a href="#" @click="$router.go(-1)">
+          <v-icon name="arrow-left" />Retour
+        </a>
+      </div>
+    </div>
   <div class="row">
-    <div class="col-md-10 offset-md-1">
+    <div class="col-md-10 offset-md-1 mt-3">
     <h1>Nouveau match</h1>
     <div class="row">
       <div class="col">
@@ -124,6 +132,7 @@
         </button>
       </div>
     </div>
+  </div>
   </div>
   </div>
 </template>
