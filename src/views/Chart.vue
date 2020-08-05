@@ -5,25 +5,32 @@
         <h1>{{ title }}</h1>
       </div>
       <div class="col mt-2">
-          <v-select
-            :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
-            :value="selectedLeague"
-            @input="onSelectedLeagueChanged"
-            placeholder="Filtrer par league"
-          />
-      </div>
-    </div>
-    <div v-if="matches.length" class="row">
-      <div class="col">
-        <line-chart
-          @on-click-point="onDotClick"
-          :chart-data="chartData"
-          :options="chartOptions"
-          :styles="{ height: '24em' }"
+        <v-select
+          :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
+          :value="selectedLeague"
+          @input="onSelectedLeagueChanged"
+          placeholder="Filtrer par league"
         />
       </div>
     </div>
     <player-stats class="mt-3" v-bind="playerStats" :elo="playerElo" />
+    <h2 v-if="matches.length">Points</h2>
+    <div v-if="matches.length" class="row">
+      <div class="col">
+        <line-chart
+          @on-click-point="onDotClick"
+          :chart-data="lineChartData"
+          :options="lineChartOptions"
+          :styles="{ height: '24em' }"
+        />
+      </div>
+    </div>
+    <h2 v-if="matches.length" class="mt-4">Taux de victoire par adversaire</h2>
+    <div v-if="matches.length" class="row">
+      <div class="col">
+        <bar-chart :options="barChartOptions" :chart-data="barChartData" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -32,6 +39,7 @@ import { mapActions, mapGetters } from 'vuex';
 import formatISO from 'date-fns/formatISO';
 import vSelect from 'vue-select';
 import LineChart from '@/components/LineChart.vue';
+import BarChart from '@/components/BarChart.vue';
 import PlayerStats from '@/components/PlayerStats.vue';
 
 const WIN_COLOR = '#2AA198';
@@ -41,7 +49,12 @@ const TEXT_COLOR = '#839496';
 export default {
   name: 'Matches',
   title: 'Matchs',
-  components: { vSelect, LineChart, PlayerStats },
+  components: {
+    vSelect,
+    LineChart,
+    PlayerStats,
+    BarChart,
+  },
 
   data() {
     return {
@@ -77,7 +90,55 @@ export default {
       return !this.$route.params.id;
     },
 
-    chartOptions() {
+    barChartOptions() {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+          labels: {
+            fontColor: TEXT_COLOR,
+          },
+        },
+        scales: {
+          xAxes: [
+            {
+              stacked: true,
+              ticks: {
+                fontColor: TEXT_COLOR,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              stacked: true,
+              ticks: {
+                fontColor: TEXT_COLOR,
+              },
+            },
+          ],
+        },
+        tooltips: {
+          callbacks: {
+            label(item, data) {
+              const { index, datasetIndex } = item;
+              const { y } = data.datasets[datasetIndex].data[
+                index
+              ];
+              return datasetIndex === 0 ? ` Winrate ${y} %` : ` Loserate ${y.substr(1)} %`;
+            },
+            afterLabel(item, data) {
+              const { index, datasetIndex } = item;
+              const { win, loose, total } = data.datasets[datasetIndex].data[
+                index
+              ];
+              return datasetIndex === 0 ? `${win} victoire(s) / ${total} match(s)` : `${loose} défaite(s) / ${total} match(s)`;
+            },
+          },
+        },
+      };
+    },
+
+    lineChartOptions() {
       return {
         responsive: true,
         maintainAspectRatio: false,
@@ -101,12 +162,20 @@ export default {
           },
         },
         scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: TEXT_COLOR,
+            },
+          }],
           xAxes: [
             {
               type: 'time',
               distribution: 'linear',
               time: {
                 unit: 'week',
+              },
+              ticks: {
+                fontColor: TEXT_COLOR,
               },
             },
           ],
@@ -129,7 +198,9 @@ export default {
             },
             label(item, data) {
               const { index } = item;
-              const { player1Score, player2Score } = data.datasets[0].data[index];
+              const { player1Score, player2Score } = data.datasets[0].data[
+                index
+              ];
               if (player1Score) {
                 return `${player1Score} - ${player2Score}`;
               }
@@ -188,6 +259,8 @@ export default {
             y,
             isLost,
             player1: player1.name,
+            player1Character: match.player1_character || player1.main,
+            player2Character: match.player2_character || player2.main,
             player1Score: match.player1_score,
             player2Score: match.player2_score,
             player2: player2.name,
@@ -203,17 +276,82 @@ export default {
       return this.matchesData.map((m) => (m.isLost ? LOOSE_COLOR : WIN_COLOR));
     },
 
-    chartData() {
+    lineChartData() {
       const colors = this.chartColors;
       return {
         datasets: [
           {
-            label: `Matchs de ${this.player.name}`,
+            label: 'Points au cours de la saison',
             borderColor: TEXT_COLOR,
             fill: false,
             data: this.matchesData,
             pointBackgroundColor: colors,
             pointBorderColor: colors,
+          },
+        ],
+      };
+    },
+
+    oponentStats() {
+      return this.matchesData.reduce((acc, match) => {
+        const oponent = match.player2 !== this.player.name ? match.player2 : match.player1;
+
+        if (!acc[oponent]) {
+          acc[oponent] = {
+            win: 0,
+            loose: 0,
+            total: 0,
+          };
+        }
+
+        acc[oponent].total += 1;
+        if (match.isLost) {
+          acc[oponent].loose += 1;
+        } else {
+          acc[oponent].win += 1;
+        }
+
+        return acc;
+      }, {});
+    },
+
+    barChartData() {
+      const oponentsData = this.oponentStats;
+      const oponentsNames = Object.keys(oponentsData);
+      return {
+        labels: oponentsNames,
+        datasets: [
+          {
+            label: 'Winrate',
+            borderColor: WIN_COLOR,
+            borderWidth: 1,
+            backgroundColor: 'rgb(42, 161, 152, 0.4)',
+            data: oponentsNames.map((n) => {
+              const { win, total } = oponentsData[n];
+              const winrate = ((win / total) * 100).toFixed(2);
+              return {
+                y: winrate,
+                x: n,
+                win,
+                total,
+              };
+            }),
+          },
+          {
+            label: 'Loserate',
+            borderColor: LOOSE_COLOR,
+            borderWidth: 1,
+            backgroundColor: 'rgb(211, 54, 130, 0.4)',
+            data: oponentsNames.map((n) => {
+              const { loose, total } = oponentsData[n];
+              const loserate = ((loose / total) * 100).toFixed(2);
+              return {
+                y: `-${loserate}`,
+                x: n,
+                loose,
+                total,
+              };
+            }),
           },
         ],
       };
