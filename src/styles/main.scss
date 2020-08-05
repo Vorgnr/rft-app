@@ -1,4 +1,5 @@
 @import './bootswatch.solar.min.css';
+@import './variables.scss';
 @import './view-select.scss';
 @import "vue-select/src/scss/vue-select.scss";
 
@@ -33,11 +34,11 @@ td.loser {
 }
 
 td.borderl {
-  border-left: 1px solid #073642;
+  border-left: 1px solid $dark;
 }
 
 th.borderl {
-  border-left: 1px solid #073642;
+  border-left: 1px solid $dark;
 }
 
 .allignr {
