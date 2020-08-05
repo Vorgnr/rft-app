@@ -60,10 +60,16 @@
           <td>{{ getRank(elo.value) }}</td>
           <td>
             <router-link tag="a" :to="`/chart/${player.id}`" class="mr-3">
-              <v-icon name="bar-chart-2" />
+              <v-icon
+                v-tooltip.right="'Voir les statistiques'"
+                name="bar-chart-2"
+              />
             </router-link>
-                        <router-link v-if="isAuth" tag="a" :to="`/players/${player.id}`">
-              <v-icon name="edit" />
+            <router-link v-if="isAuth" tag="a" :to="`/players/${player.id}`">
+              <v-icon
+                name="edit"
+                v-tooltip.right="'Editer'"
+              />
             </router-link>
           </td>
         </tr>

@@ -68,12 +68,12 @@
             <v-icon
               v-if="match.video"
               name="youtube"
+              v-tooltip.right="'Videos YouTube'"
               class="click text-danger"
             />
             <template slot="popover">
                 <p v-for="(video, index) in match.video" :key="index">
                   <a
-
                     :href="video.url"
                     target="_blank"
                     rel="noopener"
@@ -85,7 +85,12 @@
           </v-popover>
         </td>
         <td v-if="isAuth">
-          <v-icon name="edit" @click.native="$emit('open', match.id)" class="click" />
+          <v-icon
+            name="edit"
+            @click.native="$emit('open', match.id)"
+            class="click"
+            v-tooltip.right="'Editer'"
+          />
         </td>
       </tr>
     </tbody>
