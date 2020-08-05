@@ -7,28 +7,30 @@
         </a>
       </div>
     </div>
-    <div class="card border-primary mb-3" style="max-width: 40rem;">
-      <div class="card-body">
-        <h4 class="card-title">
-          {{match.player1.name}} Vs {{match.player2.name}}
-          <span
-            v-if="match.match.player1_score"
-          >{{match.match.player1_score}}-{{match.match.player2_score}}</span>
-        </h4>
-        <ul>
-          <li>Crée le {{ match.match.created_at | format }}</li>
-          <li
-            v-if="match.match.completed_at"
-            class="card-text"
-          >Terminé le {{ match.match.completed_at | format }}</li>
-          <li
-            v-if="match.match.moderated_at"
-            class="card-text"
-          >Moderé le {{ match.match.moderated_at | format }}</li>
-        </ul>
-      </div>
-    </div>
     <div class="row">
+      <div class="col">
+        <div class="card border-primary">
+          <div class="card-body">
+            <h4 class="card-title">
+              {{match.player1.name}} Vs {{match.player2.name}}
+              <span
+                v-if="match.match.player1_score"
+              >{{match.match.player1_score}}-{{match.match.player2_score}}</span>
+            </h4>
+            <ul>
+              <li>Crée le {{ match.match.created_at | format }}</li>
+              <li
+                v-if="match.match.completed_at"
+                class="card-text"
+              >Terminé le {{ match.match.completed_at | format }}</li>
+              <li
+                v-if="match.match.moderated_at"
+                class="card-text"
+              >Moderé le {{ match.match.moderated_at | format }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
       <div class="col">
         <div class="form-group">
           <label>League</label>
@@ -38,8 +40,6 @@
             disabled
           />
         </div>
-      </div>
-      <div class="col">
         <div class="form-group">
           <label for="name">FT</label>
           <input
@@ -53,7 +53,7 @@
       </div>
     </div>
     <div>
-      <div class="row">
+      <div class="row mt-3">
         <div class="col">
           <div class="card mb-3">
             <div class="card-header">{{ match.player1.name }}</div>
@@ -168,33 +168,23 @@
     </div>
     <div class="row" v-if="matchIsCompleted">
       <div class="col-md-6">
+        <replay-video v-model="match.match.video" />
+      </div>
+      <div class="col-md-6">
         <date-time
           :value="match.match.completed_at"
           title="Terminé le"
           @input="formatCompletedAtDate"
         />
       </div>
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="name">Lien Youtube</label>
-          <input
-            class="form-control"
-            type="text"
-            :placeholder="`Lien Youtube`"
-            v-model="match.match.video"
-          />
-        </div>
-      </div>
     </div>
-    <div class="row">
+    <div class="row mt-3">
       <div class="col-auto mr-auto">
         <button
           v-if="canUpdate"
           @click="submit"
           class="btn btn-primary"
-          type="button">
-          Mettre à jour
-        </button>
+          type="button">Mettre à jour</button>
         <button
           v-if="canModerate"
           @click="submitModerate"
@@ -214,12 +204,15 @@ import vSelect from 'vue-select';
 import { mapActions, mapGetters } from 'vuex';
 import CharacterSelect from '../components/CharacterSelect.vue';
 import DateTime from '../components/DateTime.vue';
+import ReplayVideo from '../components/ReplayVideo.vue';
 
 export default {
   name: 'Match',
   title: 'Match',
 
-  components: { vSelect, CharacterSelect, DateTime },
+  components: {
+    vSelect, CharacterSelect, DateTime, ReplayVideo,
+  },
 
   data() {
     return {

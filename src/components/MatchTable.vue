@@ -58,14 +58,31 @@
             name="check-square"
           />
         </td>
-        <td>
-          <a :href="match.video" target="_blank" rel="noopener">
+        <td @click="openVideo(match)">
+          <v-popover
+            trigger="manual"
+            :open="isVideoOpen === match.id"
+            offset="16"
+            @auto-hide="videoClosed"
+            :auto-hide="true">
             <v-icon
               v-if="match.video"
               name="youtube"
               class="click text-danger"
             />
-          </a>
+            <template slot="popover">
+                <p v-for="(video, index) in match.video" :key="index">
+                  <a
+
+                    :href="video.url"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    {{ video.title || video.url }}
+                  </a>
+                  </p>
+            </template>
+          </v-popover>
         </td>
         <td v-if="isAuth">
           <v-icon name="edit" @click.native="$emit('open', match.id)" class="click" />
@@ -90,6 +107,12 @@ export default {
     isAuth: Boolean,
   },
 
+  data() {
+    return {
+      isVideoOpen: false,
+    };
+  },
+
   methods: {
     getMatchCssClass: (player, match) => {
       if (!match.completed_at) {
@@ -107,6 +130,18 @@ export default {
         || match.player2_score > match.player1_score
         ? 'winner'
         : 'loser';
+    },
+
+    openVideo(match) {
+      if (match.video.length === 1) {
+        window.open(match.video[0].url);
+      } else if (match.video.length > 1) {
+        this.isVideoOpen = match.id;
+      }
+    },
+
+    videoClosed() {
+      this.isVideoOpen = false;
     },
   },
 };
