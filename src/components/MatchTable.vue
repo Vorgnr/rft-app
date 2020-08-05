@@ -45,7 +45,7 @@
         <td class="borderl">
           <v-icon
             class="text-primary"
-            v-tooltip.right="`Terminé le ${$options.filters.format(match.completed_at)}`"
+            v-tooltip.right="`Terminé ${$options.filters.formatPrettier(match.completed_at)}`"
             v-if="match.completed_at"
             name="check"
           />
@@ -53,7 +53,7 @@
         <td>
           <v-icon
             class="text-success"
-            v-tooltip.right="`Modéré le ${$options.filters.format(match.moderated_at)}`"
+            v-tooltip.right="`Modéré ${$options.filters.formatPrettier(match.moderated_at)}`"
             v-if="match.moderated_at"
             name="check-square"
           />

@@ -18,15 +18,15 @@
               >{{match.match.player1_score}}-{{match.match.player2_score}}</span>
             </h4>
             <ul>
-              <li>Crée le {{ match.match.created_at | format }}</li>
+              <li>Crée {{ match.match.created_at | formatPrettier }}</li>
               <li
                 v-if="match.match.completed_at"
                 class="card-text"
-              >Terminé le {{ match.match.completed_at | format }}</li>
+              >Terminé {{ match.match.completed_at | formatPrettier }}</li>
               <li
                 v-if="match.match.moderated_at"
                 class="card-text"
-              >Moderé le {{ match.match.moderated_at | format }}</li>
+              >Moderé {{ match.match.moderated_at | formatPrettier }}</li>
             </ul>
           </div>
         </div>
