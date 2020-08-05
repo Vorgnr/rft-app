@@ -20,7 +20,7 @@
       </button>
 
       <div :class="collapsed ? '' : 'show'" class="collapse navbar-collapse" id="mainNavbar">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav  mr-auto">
           <router-link tag="li" class="nav-item" to="/matches">
             <a class="nav-link" href="#">Matchs</a>
           </router-link>
@@ -30,7 +30,8 @@
           <router-link v-if="isAdmin" tag="li" class="nav-item" to="/admin/leagues">
             <a class="nav-link" href="#">Leagues</a>
           </router-link>
-
+        </ul>
+        <ul class="navbar-nav">
           <router-link v-if="isAuth" tag="li" class="nav-item" to="/profile">
             <a class="nav-link" href="#">
               <v-icon name="user" />

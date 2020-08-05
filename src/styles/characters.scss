@@ -13,7 +13,8 @@
 
   div {
     span.characters {
-      display:inline-table
+      display:table-cell;
+      padding: 19px;
     }
   }
 } 
