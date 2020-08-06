@@ -9,13 +9,13 @@
     <div class="col-md-4 col-12">
       <div class="jumbotron jumbotron-small text-success">
         <h2 class="">{{ win }} Victoires</h2>
-        <p v-if="total">{{ ((win / total) * 100).toFixed(2) }} %</p>
+        <p v-if="total">{{ win | percent(total) }} %</p>
       </div>
     </div>
     <div class="col-md-4 col-12">
       <div class="jumbotron jumbotron-small text-danger">
         <h2>{{ loose }} Défaites</h2>
-        <p v-if="total">{{ ((loose / total) * 100).toFixed(2) }} %</p>
+        <p v-if="total">{{ loose | percent(total) }} %</p>
       </div>
     </div>
   </div>

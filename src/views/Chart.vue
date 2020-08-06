@@ -19,8 +19,8 @@
       <div class="col">
         <line-chart
           @on-click-point="onDotClick"
-          :chart-data="lineChartData"
-          :options="lineChartOptions"
+          :chart-data="pointChartData"
+          :options="pointChartOptions"
           :styles="{ height: '24em' }"
         />
       </div>
@@ -28,7 +28,28 @@
     <h2 v-if="matches.length" class="mt-4">Taux de victoire par adversaire</h2>
     <div v-if="matches.length" class="row">
       <div class="col">
-        <bar-chart :options="barChartOptions" :chart-data="barChartData" />
+        <bar-chart :options="oponentCharOptions" :chart-data="oponentCharData" />
+      </div>
+    </div>
+
+    <div v-if="matches.length" class="row">
+      <div v-if="player.main_character" class="col">
+        <h3 class="mt-4">
+          Mes personnages
+        </h3>
+        <doughnut-chart
+          :options="characterChartOptions(charactersStats)"
+          :chart-data="characterChartData(charactersStats)"
+        />
+      </div>
+      <div class="col">
+        <h3 class="mt-4">
+          Personnages de mes adversaires
+        </h3>
+        <doughnut-chart
+          :options="characterChartOptions(oponentCharactersStats)"
+          :chart-data="characterChartData(oponentCharactersStats)"
+        />
       </div>
     </div>
   </div>
@@ -40,6 +61,7 @@ import formatISO from 'date-fns/formatISO';
 import vSelect from 'vue-select';
 import LineChart from '@/components/LineChart.vue';
 import BarChart from '@/components/BarChart.vue';
+import DoughnutChart from '@/components/DoughnutChart.vue';
 import PlayerStats from '@/components/PlayerStats.vue';
 
 const WIN_COLOR = '#2AA198';
@@ -54,6 +76,7 @@ export default {
     LineChart,
     PlayerStats,
     BarChart,
+    DoughnutChart,
   },
 
   data() {
@@ -90,7 +113,7 @@ export default {
       return !this.$route.params.id;
     },
 
-    barChartOptions() {
+    defaultOption() {
       return {
         responsive: true,
         maintainAspectRatio: false,
@@ -99,6 +122,45 @@ export default {
             fontColor: TEXT_COLOR,
           },
         },
+      };
+    },
+
+    characterChartOptions() {
+      return (stats) => ({
+        ...this.defaultOption,
+        animation: {
+          animateRotate: false,
+          animateScale: true,
+        },
+        tooltips: {
+          callbacks: {
+            title: (items) => {
+              const { index } = items[0];
+              const names = Object.keys(stats);
+              return this.$options.filters.capitalize(names[index]);
+            },
+            label: (item) => {
+              const { index } = item;
+              const names = Object.keys(stats);
+              const { win, total } = stats[names[index]];
+              const winLabel = this.$options.filters.pluralize('victoire', win);
+              const matchLabel = this.$options.filters.pluralize('match', total);
+              return ` ${win} ${winLabel} sur ${total} ${matchLabel}`;
+            },
+            afterLabel: (item) => {
+              const { index } = item;
+              const names = Object.keys(stats);
+              const { win, total } = stats[names[index]];
+              return `Taux de victoire: ${this.$options.filters.percent(win, total)} %`;
+            },
+          },
+        },
+      });
+    },
+
+    oponentCharOptions() {
+      return {
+        ...this.defaultOption,
         scales: {
           xAxes: [
             {
@@ -121,27 +183,31 @@ export default {
           callbacks: {
             label(item, data) {
               const { index, datasetIndex } = item;
-              const { y } = data.datasets[datasetIndex].data[
-                index
-              ];
-              return datasetIndex === 0 ? ` Winrate ${y} %` : ` Loserate ${y.substr(1)} %`;
+              const { y } = data.datasets[datasetIndex].data[index];
+              return datasetIndex === 0
+                ? ` Winrate ${y} %`
+                : ` Loserate ${y.substr(1)} %`;
             },
-            afterLabel(item, data) {
+            afterLabel: (item, data) => {
               const { index, datasetIndex } = item;
               const { win, loose, total } = data.datasets[datasetIndex].data[
                 index
               ];
-              return datasetIndex === 0 ? `${win} victoire(s) / ${total} match(s)` : `${loose} défaite(s) / ${total} match(s)`;
+              const winLabel = this.$options.filters.pluralize('victoire', win);
+              const looseLabel = this.$options.filters.pluralize('défaite', loose);
+              const matchLabel = this.$options.filters.pluralize('match', total);
+              return datasetIndex === 0
+                ? `${win} ${winLabel} / ${total} ${matchLabel}`
+                : `${loose} ${looseLabel} / ${total} ${matchLabel}`;
             },
           },
         },
       };
     },
 
-    lineChartOptions() {
+    pointChartOptions() {
       return {
-        responsive: true,
-        maintainAspectRatio: false,
+        ...this.defaultOption,
         hover: {
           onHover: (e, item) => {
             if (item.length) {
@@ -151,22 +217,19 @@ export default {
             }
           },
         },
-        legend: {
-          labels: {
-            fontColor: TEXT_COLOR,
-          },
-        },
         elements: {
           line: {
             tension: 0,
           },
         },
         scales: {
-          yAxes: [{
-            ticks: {
-              fontColor: TEXT_COLOR,
+          yAxes: [
+            {
+              ticks: {
+                fontColor: TEXT_COLOR,
+              },
             },
-          }],
+          ],
           xAxes: [
             {
               type: 'time',
@@ -259,8 +322,8 @@ export default {
             y,
             isLost,
             player1: player1.name,
-            player1Character: match.player1_character || player1.main,
-            player2Character: match.player2_character || player2.main,
+            player1Character: match.character1 || player1.main_character,
+            player2Character: match.character2 || player2.main_character,
             player1Score: match.player1_score,
             player2Score: match.player2_score,
             player2: player2.name,
@@ -276,7 +339,7 @@ export default {
       return this.matchesData.map((m) => (m.isLost ? LOOSE_COLOR : WIN_COLOR));
     },
 
-    lineChartData() {
+    pointChartData() {
       const colors = this.chartColors;
       return {
         datasets: [
@@ -290,6 +353,61 @@ export default {
           },
         ],
       };
+    },
+
+    charactersStats() {
+      return this.matchesData.reduce((acc, match) => {
+        const matchCharacter = match.player1 === this.player.name
+          ? match.player1Character
+          : match.player2Character;
+
+        const chars = matchCharacter.split(',');
+        chars.forEach((c) => {
+          if (!acc[c]) {
+            acc[c] = {
+              win: 0,
+              loose: 0,
+              total: 0,
+            };
+          }
+          acc[c].total += 1;
+          if (match.isLost) {
+            acc[c].loose += 1;
+          } else {
+            acc[c].win += 1;
+          }
+        });
+
+        return acc;
+      }, {});
+    },
+
+    oponentCharactersStats() {
+      return this.matchesData.reduce((acc, match) => {
+        let matchCharacter = match.player1 === this.player.name
+          ? match.player2Character
+          : match.player1Character;
+
+        matchCharacter = matchCharacter || 'Perso non renseigné';
+        const chars = matchCharacter.split(',');
+        chars.forEach((c) => {
+          if (!acc[c]) {
+            acc[c] = {
+              win: 0,
+              loose: 0,
+              total: 0,
+            };
+          }
+          acc[c].total += 1;
+          if (match.isLost) {
+            acc[c].loose += 1;
+          } else {
+            acc[c].win += 1;
+          }
+        });
+
+        return acc;
+      }, {});
     },
 
     oponentStats() {
@@ -315,7 +433,29 @@ export default {
       }, {});
     },
 
-    barChartData() {
+    characterChartData() {
+      return (stats) => {
+        const charactersName = Object.keys(stats);
+        const colors = charactersName.map((n) => this.$options.filters.stringToColour(n));
+        return {
+          labels: charactersName.map((c) => this.$options.filters.capitalize(c)),
+          datasets: [{
+            borderColor: colors,
+            backgroundColor: colors.map((h) => {
+              const { r, g, b } = this.$options.filters.hexToRgb(h);
+              return `rgba(${r}, ${g}, ${b}, 0.4)`;
+            }),
+            data: charactersName.map((n) => {
+              const { total } = stats[n];
+
+              return total;
+            }),
+          }],
+        };
+      };
+    },
+
+    oponentCharData() {
       const oponentsData = this.oponentStats;
       const oponentsNames = Object.keys(oponentsData);
       return {
@@ -325,10 +465,10 @@ export default {
             label: 'Winrate',
             borderColor: WIN_COLOR,
             borderWidth: 1,
-            backgroundColor: 'rgb(42, 161, 152, 0.4)',
+            backgroundColor: 'rgba(42, 161, 152, 0.4)',
             data: oponentsNames.map((n) => {
               const { win, total } = oponentsData[n];
-              const winrate = ((win / total) * 100).toFixed(2);
+              const winrate = this.$options.filters.percent(win, total);
               return {
                 y: winrate,
                 x: n,
@@ -344,7 +484,7 @@ export default {
             backgroundColor: 'rgb(211, 54, 130, 0.4)',
             data: oponentsNames.map((n) => {
               const { loose, total } = oponentsData[n];
-              const loserate = ((loose / total) * 100).toFixed(2);
+              const loserate = this.$options.filters.percent(loose, total);
               return {
                 y: `-${loserate}`,
                 x: n,
