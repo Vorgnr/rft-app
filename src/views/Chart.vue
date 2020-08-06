@@ -362,23 +362,7 @@ export default {
           : match.player2Character;
 
         const chars = matchCharacter.split(',');
-        chars.forEach((c) => {
-          if (!acc[c]) {
-            acc[c] = {
-              win: 0,
-              loose: 0,
-              total: 0,
-            };
-          }
-          acc[c].total += 1;
-          if (match.isLost) {
-            acc[c].loose += 1;
-          } else {
-            acc[c].win += 1;
-          }
-        });
-
-        return acc;
+        return this.reduceCharactersMatches(acc, chars, match);
       }, {});
     },
 
@@ -390,23 +374,7 @@ export default {
 
         matchCharacter = matchCharacter || 'Perso non renseigné';
         const chars = matchCharacter.split(',');
-        chars.forEach((c) => {
-          if (!acc[c]) {
-            acc[c] = {
-              win: 0,
-              loose: 0,
-              total: 0,
-            };
-          }
-          acc[c].total += 1;
-          if (match.isLost) {
-            acc[c].loose += 1;
-          } else {
-            acc[c].win += 1;
-          }
-        });
-
-        return acc;
+        return this.reduceCharactersMatches(acc, chars, match);
       }, {});
     },
 
@@ -534,6 +502,25 @@ export default {
         const { match } = this.matches[index];
         this.$router.push({ name: 'match', params: { id: match.id } });
       }
+    },
+
+    reduceCharactersMatches(acc, chars, match) {
+      return chars.reduce((a, c) => {
+        if (!a[c]) {
+          a[c] = {
+            win: 0,
+            loose: 0,
+            total: 0,
+          };
+        }
+        a[c].total += 1;
+        if (match.isLost) {
+          a[c].loose += 1;
+        } else {
+          a[c].win += 1;
+        }
+        return a;
+      }, acc);
     },
 
     async onSelectedLeagueChanged(league) {
