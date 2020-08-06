@@ -34,7 +34,7 @@
         </div>
       </div>
     </div>
-    <table class="table table-hover">
+    <table v-if="!loading" class="table table-hover">
       <thead>
         <tr>
           <th>Pos</th>
@@ -59,13 +59,13 @@
           <td>{{ elo.value }}</td>
           <td>{{ getRank(elo.value) }}</td>
           <td>
-            <router-link tag="a" :to="`/chart/${player.id}`" class="mr-3">
+            <router-link tag="a" :to="`/chart/`" class="mr-3">
               <v-icon
                 v-tooltip.right="'Voir les statistiques'"
                 name="bar-chart-2"
               />
             </router-link>
-            <router-link v-if="isAuth" tag="a" :to="`/players/${player.id}`">
+            <router-link v-if="isAuth" tag="a" :to="`/players/`">
               <v-icon
                 name="edit"
                 v-tooltip.right="'Editer'"
@@ -96,6 +96,7 @@ export default {
 
   data() {
     return {
+      loading: true,
       perPage: 30,
       page: 1,
       search: '',
@@ -128,10 +129,6 @@ export default {
     ...mapActions('notifications', {
       notify: 'add',
       notifyError: 'addError',
-    }),
-
-    ...mapGetters({
-      loading: 'net/loading',
     }),
 
     getRank(eloValue) {
@@ -205,9 +202,11 @@ export default {
     },
   },
 
-  async mounted() {
+  async created() {
+    this.loading = true;
     await this.getLeagues();
     await this.getPlayers({ leagueId: this.currentSelectedLeague.code });
+    this.loading = false;
   },
 };
 </script>
