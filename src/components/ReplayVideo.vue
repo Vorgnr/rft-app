@@ -1,12 +1,17 @@
 <template>
   <div class="card">
-    <h4 class="card-header">
-      Video Youtube <button
-        @click="addVideo"
-        class="btn btn-secondary">
-          <v-icon name="plus" />
-        </button>
-    </h4>
+    <div class="card-header d-flex">
+      <div class="mr-auto">
+        Video Youtube
+      </div>
+      <div>
+        <button
+          @click="addVideo"
+          class="btn btn-secondary">
+            <v-icon name="plus" />
+          </button>
+      </div>
+    </div>
     <div v-for="(video) in vid" :key="video.timestamp" class="card-body">
       <div class="form-group">
         <label for="name">Titre</label>
