@@ -22,7 +22,7 @@
               <li
                 v-if="match.match.completed_at"
                 class="card-text"
-              >Terminé {{ match.match.completed_at | formatPrettier }}</li>
+              >Terminé {{ match.match.completed_at | formatPrettierAndWeek }}</li>
               <li
                 v-if="match.match.moderated_at"
                 class="card-text"

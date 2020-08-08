@@ -27,13 +27,13 @@
         <td :class="getMatchCssClass(1, match)">{{ match.player1_previous_elo }}</td>
         <td :class="getMatchCssClass(1, match)">{{ match.player1_elo }}</td>
         <td :class="getMatchCssClass(1, match)">
-          <span v-if="match.player1_ragequit">RQ</span>
-          <span v-if="match.player1_forfeit">Non effectué</span>
+          <span v-tooltip.right="'Ragequit'" v-if="match.player1_ragequit">RQ</span>
+          <span v-tooltip.right="'Non effectué'" v-if="match.player1_forfeit">NE</span>
           <span v-else>{{ match.player1_score }}</span>
         </td>
         <td class="borderl allignr" :class="getMatchCssClass(2, match)">
-          <span v-if="match.player2_ragequit">RQ</span>
-          <span v-if="match.player2_forfeit">Non effectué</span>
+          <span v-tooltip.right="'Ragequit'" v-if="match.player2_ragequit">RQ</span>
+          <span v-tooltip.right="'Non effectué'" v-if="match.player2_forfeit">NE</span>
           <span v-else>{{ match.player2_score }}</span>
         </td>
         <td :class="getMatchCssClass(2, match)">{{ match.player2_elo }}</td>
@@ -45,7 +45,9 @@
         <td class="borderl">
           <v-icon
             class="text-primary"
-            v-tooltip.right="`Terminé ${$options.filters.formatPrettier(match.completed_at)}`"
+            v-tooltip.right="
+              `Terminé ${$options.filters.formatPrettierAndWeek(match.completed_at)}`
+            "
             v-if="match.completed_at"
             name="check"
           />
