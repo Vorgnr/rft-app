@@ -56,6 +56,14 @@ const actions = {
     commit('updateItem', response.data);
   },
 
+  async unmoderate({ commit }, { matchId }) {
+    const response = await api
+      .from('matches')
+      .put(`/${matchId}/unmoderate`);
+
+    commit('updateItem', response.data);
+  },
+
   async cancel({ commit }, { matchId }) {
     const response = await api
       .from('matches')

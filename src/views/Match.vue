@@ -190,7 +190,13 @@
           @click="submitModerate"
           class="btn btn-primary"
           type="button"
-        >Valider et distribuer les points</button>
+        >Modérer et distribuer les points</button>
+        <button
+          v-if="canUnmoderate"
+          @click="submitUnmoderate"
+          class="btn btn-danger"
+          type="button"
+        >Défaire la modération</button>
       </div>
       <div class="col-auto" v-if="!this.match.match.moderated_at">
         <button @click="cancelMatch" class="btn btn-warning">Annuler le match</button>
@@ -244,6 +250,12 @@ export default {
       );
     },
 
+    canUnmoderate() {
+      return (
+        this.match.match.moderated_at && this.isAdmin
+      );
+    },
+
     canUpdate() {
       if (this.isAdmin) {
         return true;
@@ -262,6 +274,7 @@ export default {
       getById: 'getById',
       update: 'update',
       moderate: 'moderate',
+      unmoderate: 'unmoderate',
       cancel: 'cancel',
     }),
     ...mapActions('leagues', {
@@ -362,6 +375,27 @@ export default {
       } catch (e) {
         this.notifyError(e);
       }
+    },
+
+    async submitUnmoderate() {
+      this.$confirm({
+        message: 'Défaire la modération et rendre les points distribués ?',
+        button: {
+          no: 'Non',
+          yes: 'Oui',
+        },
+        callback: async (confirm) => {
+          if (confirm) {
+            try {
+              await this.unmoderate({ matchId: this.$route.params.id });
+              this.notify({ title: 'Modération défaite', type: 'success' });
+              this.$router.push({ name: 'matches' });
+            } catch (e) {
+              this.notifyError(e);
+            }
+          }
+        },
+      });
     },
 
     async submitModerate() {
