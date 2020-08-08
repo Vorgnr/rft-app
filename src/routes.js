@@ -80,7 +80,7 @@ const routes = [
     path: '/players/:id',
     name: 'player',
     component: () => import('@/views/Player.vue'),
-    beforeEnter: mustBeAuth,
+    beforeEnter: mustBeAdmin,
   },
   {
     path: '/my-chart',
