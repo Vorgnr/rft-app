@@ -178,25 +178,115 @@
         />
       </div>
     </div>
+    <div class="row mt-3" v-if="match.match.moderated_at">
+      <div class="col">
+        <div class="card mb-3">
+          <div class="card-header">Pénalités</div>
+          <div class="card-body">
+            <div v-if="isAdmin" class="row">
+              <div class="col">
+                <div
+                  class="alert alert-info"
+                >Seules les pénalités supérieures à 0 seront prise en compte</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label for="name">Pénalité {{ match.player1.name }}</label>
+                  <input
+                    :disabled="!isAdmin"
+                    class="form-control col-md-4"
+                    type="number"
+                    :placeholder="`Pénalité ${ match.player1.name }`"
+                    v-model="player1_elo_penalty"
+                  />
+                  <div class="valid-feedback">
+                    {{ match.player1.name }} a
+                    {{ (0 > match.match.player1_elo)
+                    ? `perdu ${match.match.player1_elo.toString().substr(1)}`
+                    : `gagné ${match.match.player1_elo}`
+                    }} Points
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label for="name">Pénalité {{ match.player2.name }}</label>
+                  <input
+                    :disabled="!isAdmin"
+                    class="form-control col-md-4"
+                    type="number"
+                    :placeholder="`Pénalité ${ match.player2.name }`"
+                    v-model="player2_elo_penalty"
+                  />
+                  <div class="valid-feedback">
+                    {{ match.player2.name }} a
+                    {{ (0 > match.match.player2_elo)
+                    ? `perdu ${match.match.player2_elo.toString().substr(1)}`
+                    : `gagné ${match.match.player2_elo}`
+                    }} Points
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-if="player1_elo_penalty > 0 || player2_elo_penalty > 0" class="card-footer">
+            <button @click="submitPenalize" class="btn btn-warning">Pénaliser</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row mt-3">
-      <div class="col-auto mr-auto">
-        <button
-          v-if="canUpdate"
-          @click="submit"
-          class="btn btn-primary"
-          type="button">Mettre à jour</button>
-        <button
-          v-if="canModerate"
-          @click="submitModerate"
-          class="btn btn-primary"
-          type="button"
-        >Modérer et distribuer les points</button>
-        <button
-          v-if="canUnmoderate"
-          @click="submitUnmoderate"
-          class="btn btn-danger"
-          type="button"
-        >Défaire la modération</button>
+      <div class="col">
+        <div class="form-group has-success">
+          <label for="name">
+            Commentaire
+          </label>
+          <textarea
+            :disabled="!isAdmin"
+            class="form-control"
+            :class="{
+              'is-valid': 255 - comment.length > 0,
+              'is-invalid': 255 - comment.length <= 0,
+            }"
+            v-model="comment"
+            rows="3"
+          ></textarea>
+          <div class="valid-feedback">
+            {{ (255 - comment.length) > 0 ? (255 - comment.length) : 0 }}
+            charactère(s) restant
+          </div>
+          <div class="invalid-feedback">
+            {{ comment.length }} charactères sur 255
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col d-flex">
+        <div class="mr-auto">
+          <button
+            v-if="canUpdate"
+            @click="submit"
+            class="btn btn-primary mr-auto"
+            type="button"
+          >Mettre à jour</button>
+        </div>
+        <div>
+          <button
+            v-if="canModerate"
+            @click="submitModerate"
+            class="btn btn-primary mr-3"
+            type="button"
+          >Modérer et distribuer les points</button>
+          <button
+            v-if="canUnmoderate"
+            @click="submitUnmoderate"
+            class="btn btn-warning mr-3"
+            type="button"
+          >Défaire la modération</button>
+        </div>
       </div>
       <div class="col-auto" v-if="!this.match.match.moderated_at">
         <button @click="cancelMatch" class="btn btn-warning">Annuler le match</button>
@@ -217,14 +307,20 @@ export default {
   title: 'Match',
 
   components: {
-    vSelect, CharacterSelect, DateTime, ReplayVideo,
+    vSelect,
+    CharacterSelect,
+    DateTime,
+    ReplayVideo,
   },
 
   data() {
     return {
+      player1_elo_penalty: null,
+      player2_elo_penalty: null,
       completed_at_date: null,
       completed_at_hour: null,
       completed_at_minute: null,
+      comment: '',
     };
   },
 
@@ -251,12 +347,14 @@ export default {
     },
 
     canUnmoderate() {
-      return (
-        this.match.match.moderated_at && this.isAdmin
-      );
+      return this.match.match.moderated_at && this.isAdmin;
     },
 
     canUpdate() {
+      if (this.comment.length >= 255) {
+        return false;
+      }
+
       if (this.isAdmin) {
         return true;
       }
@@ -275,6 +373,7 @@ export default {
       update: 'update',
       moderate: 'moderate',
       unmoderate: 'unmoderate',
+      penalize: 'penalize',
       cancel: 'cancel',
     }),
     ...mapActions('leagues', {
@@ -365,10 +464,15 @@ export default {
         );
       }
 
+      const body = this.match.match;
+      if (body.comment !== this.comment) {
+        body.comment = this.comment;
+      }
+
       try {
         await this.update({
           matchId: this.$route.params.id,
-          body: this.match.match,
+          body,
         });
         this.notify({ title: 'Match mis à jour', type: 'success' });
         this.$router.push({ name: 'matches' });
@@ -418,10 +522,38 @@ export default {
         },
       });
     },
+
+    async submitPenalize() {
+      this.$confirm({
+        message: 'Pénaliser les points gagnés sur le match',
+        button: {
+          no: 'Non',
+          yes: 'Oui',
+        },
+        callback: async (confirm) => {
+          if (confirm) {
+            try {
+              await this.penalize({
+                matchId: this.$route.params.id,
+                player1_elo_penalty: this.player1_elo_penalty,
+                player2_elo_penalty: this.player2_elo_penalty,
+              });
+              this.notify({ title: 'Match pénalisé', type: 'success' });
+              this.$router.push({ name: 'matches' });
+            } catch (e) {
+              this.notifyError(e);
+            }
+          }
+        },
+      });
+    },
   },
 
   async created() {
     await this.getMatch();
+    this.player1_elo_penalty = this.match.match.player1_elo_penalty;
+    this.player2_elo_penalty = this.match.match.player2_elo_penalty;
+    this.comment = this.match.match.comment || '';
   },
 };
 </script>

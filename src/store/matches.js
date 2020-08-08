@@ -64,6 +64,17 @@ const actions = {
     commit('updateItem', response.data);
   },
 
+  async penalize({ commit }, body) {
+    const response = await api
+      .from('matches')
+      .post(`/${body.matchId}/penalize`, {
+        player1_elo_penalty: body.player1_elo_penalty,
+        player2_elo_penalty: body.player2_elo_penalty,
+      });
+
+    commit('updateItem', response.data);
+  },
+
   async cancel({ commit }, { matchId }) {
     const response = await api
       .from('matches')

@@ -65,7 +65,7 @@
                 name="bar-chart-2"
               />
             </router-link>
-            <router-link v-if="isAuth" tag="a" :to="`/players/${player.id}`">
+            <router-link v-if="isAdmin" tag="a" :to="`/players/${player.id}`">
               <v-icon
                 name="edit"
                 v-tooltip.right="'Editer'"
@@ -114,6 +114,7 @@ export default {
     }),
     ...mapGetters('auth', {
       isAuth: 'isAuth',
+      isAdmin: 'isAdmin',
     }),
   },
 
