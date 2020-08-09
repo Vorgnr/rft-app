@@ -10,6 +10,7 @@
           :value="selectedLeague"
           @input="onSelectedLeagueChanged"
           placeholder="Filtrer par league"
+          :clearable="false"
         />
       </div>
     </div>

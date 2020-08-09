@@ -9,7 +9,7 @@
               { label: name, code: id, rankTreshold  }
             ))"
             @input="onLeagueChange"
-            :v-model="currentSelectedLeague"
+            :value="currentSelectedLeague"
             placeholder="Selectionnez une league"
             :clearable="false"
           >
