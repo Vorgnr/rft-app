@@ -48,6 +48,10 @@ const actions = {
       .request(payload);
   },
 
+  clearPlayer({ commit }) {
+    commit('setItem', null);
+  },
+
   async fetchMore({ commit }, obj = {}) {
     const response = await callList(obj);
     commit('appendToList', response.data);

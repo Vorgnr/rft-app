@@ -55,6 +55,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import store from '@/store';
 import CharacterSelect from '../components/CharacterSelect.vue';
 
 export default {
@@ -113,8 +114,11 @@ export default {
     },
   },
 
-  async mounted() {
-    await this.getPlayer();
+  async beforeRouteEnter(to, from, next) {
+    store.dispatch('players/clearPlayer')
+      .then(() => {
+        next((vm) => vm.getPlayer());
+      });
   },
 };
 </script>
