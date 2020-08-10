@@ -34,6 +34,7 @@
             v-model="matchStatus"
             @input="onStatusChange"
             placeholder="Filtrer par statut de match"
+            :multiple="true"
           />
         </div>
       </div>
@@ -109,6 +110,15 @@ export default {
     },
 
     onStatusChange() {
+      this.matchStatus = this.matchStatus
+        .reverse()
+        .reduce((acc, filter) => {
+          acc.code[filter.code] += 1;
+          if (acc.code[filter.code] < 2) {
+            acc.filters.push(filter);
+          }
+          return acc;
+        }, { code: { moderatedAt: 0, completedAt: 0 }, filters: [] }).filters;
       this.getMatches();
     },
 
@@ -122,7 +132,9 @@ export default {
         payload.leagueId = this.currentLeague.code;
       }
       if (this.matchStatus) {
-        payload[this.matchStatus] = 'null';
+        this.matchStatus.forEach((s) => {
+          payload[s.code] = s.filter;
+        });
       }
       try {
         await this.fetchMoreMatches({ params: payload });
@@ -144,7 +156,9 @@ export default {
         payload.leagueId = this.currentLeague.code;
       }
       if (this.matchStatus) {
-        payload[this.matchStatus.code] = this.matchStatus.filter;
+        this.matchStatus.forEach((s) => {
+          payload[s.code] = s.filter;
+        });
       }
       try {
         await this.listMatches({ params: payload });
