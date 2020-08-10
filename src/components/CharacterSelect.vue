@@ -79,12 +79,13 @@ export default {
       default: 'Choisissez votre personnage',
     },
     multiple: Boolean,
+    value: String,
   },
 
   data() {
     return {
-      selected: '',
       ch: characters,
+      selected: this.value,
     };
   },
 
