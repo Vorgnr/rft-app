@@ -10,15 +10,15 @@
             ))"
             @input="onLeagueChange"
             :value="currentSelectedLeague"
-            placeholder="Selectionnez une league"
+            placeholder="Selectionnez une saison"
             :clearable="false"
           >
             <template v-slot:no-options="{ search, searching }">
               <template v-if="searching">
-                Aucune league trouvée pour
+                Aucune saison trouvée pour
                 <em>{{ search }}</em>.
               </template>
-              <span v-else>Aucune league</span>
+              <span v-else>Aucune saison</span>
             </template>
           </v-select>
         </div>

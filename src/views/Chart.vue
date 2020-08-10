@@ -9,7 +9,7 @@
           :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
           :value="selectedLeague"
           @input="onSelectedLeagueChanged"
-          placeholder="Filtrer par league"
+          placeholder="Filtrer par saison"
           :clearable="false"
         />
       </div>

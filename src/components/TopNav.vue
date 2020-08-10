@@ -28,7 +28,7 @@
             <a class="nav-link" href="#">Nouveau match</a>
           </router-link>
           <router-link v-if="isAdmin" tag="li" class="nav-item" to="/admin/leagues">
-            <a class="nav-link" href="#">Leagues</a>
+            <a class="nav-link" href="#">Saisons</a>
           </router-link>
         </ul>
         <ul class="navbar-nav">

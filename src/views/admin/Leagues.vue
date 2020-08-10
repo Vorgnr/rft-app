@@ -4,9 +4,9 @@
       <v-icon name="arrow-left" />Retour
     </a>
     <h1 class="mt-2 d-flex">
-      Administration des leagues
+      Administration des saisons
       <button class="btn btn-primary ml-md-auto" @click="toggleLeagueAdd">
-        <v-icon name="plus-circle" />Ajouter une league
+        <v-icon name="plus-circle" />Ajouter une saison
       </button>
     </h1>
     <div class="row mt-4">
