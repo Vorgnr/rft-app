@@ -13,7 +13,7 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <label>League</label>
+          <label>Saison</label>
           <v-select
             :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
             v-model="selectedLeague"

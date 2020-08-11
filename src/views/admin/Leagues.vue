@@ -211,7 +211,7 @@ export default {
           },
         });
         this.leagueCreationFormVisible = false;
-        this.notify({ title: 'League crée', type: 'success' });
+        this.notify({ title: 'Saison crée', type: 'success' });
       } catch (e) {
         this.notifyError(e);
       }
@@ -226,7 +226,7 @@ export default {
             is_active: league.is_active,
           },
         });
-        this.notify({ title: 'League mise à jour', type: 'success' });
+        this.notify({ title: 'Saison mise à jour', type: 'success' });
       } catch (e) {
         this.notifyError(e);
       }
