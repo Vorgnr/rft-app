@@ -37,6 +37,7 @@
           <v-select
             :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
             :value="match.match.league_id"
+            :clearable="false"
             disabled
           />
         </div>
@@ -298,6 +299,7 @@
 <script>
 import vSelect from 'vue-select';
 import { mapActions, mapGetters } from 'vuex';
+import store from '@/store';
 import CharacterSelect from '../components/CharacterSelect.vue';
 import DateTime from '../components/DateTime.vue';
 import ReplayVideo from '../components/ReplayVideo.vue';
@@ -387,6 +389,9 @@ export default {
     async getMatch() {
       try {
         await this.getById({ matchId: this.$route.params.id });
+        this.player1_elo_penalty = this.match.match.player1_elo_penalty;
+        this.player2_elo_penalty = this.match.match.player2_elo_penalty;
+        this.comment = this.match.match.comment || '';
       } catch (e) {
         this.notifyError(e);
       }
@@ -549,11 +554,11 @@ export default {
     },
   },
 
-  async created() {
-    await this.getMatch();
-    this.player1_elo_penalty = this.match.match.player1_elo_penalty;
-    this.player2_elo_penalty = this.match.match.player2_elo_penalty;
-    this.comment = this.match.match.comment || '';
+  beforeRouteEnter(to, from, next) {
+    store.dispatch('matches/clearMatch')
+      .then(() => {
+        next((vm) => vm.getMatch());
+      });
   },
 };
 </script>

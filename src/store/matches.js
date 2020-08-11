@@ -64,6 +64,10 @@ const actions = {
     commit('updateItem', response.data);
   },
 
+  clearMatch({ commit }) {
+    commit('setItem', {});
+  },
+
   async penalize({ commit }, body) {
     const response = await api
       .from('matches')
