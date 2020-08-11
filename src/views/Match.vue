@@ -126,7 +126,7 @@
               <div class="form-group">
                 <label>Perso {{ match.player2.name }}</label>
                 <character-select
-                  v-model="match.match.character1"
+                  v-model="match.match.character2"
                   :placeholder="`Perso ${match.player2.name}`"
                   multiple
                 />
@@ -288,7 +288,7 @@
           >Défaire la modération</button>
         </div>
       </div>
-      <div class="col-auto" v-if="!this.match.match.moderated_at">
+      <div class="col-auto" v-if="canModerate">
         <button @click="cancelMatch" class="btn btn-warning">Annuler le match</button>
       </div>
     </div>

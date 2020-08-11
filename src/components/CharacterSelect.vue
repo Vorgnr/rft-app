@@ -83,9 +83,15 @@ export default {
   },
 
   data() {
+    let selected;
+    if (this.multiple) {
+      selected = this.value && this.value.split(',');
+    } else {
+      selected = this.value;
+    }
     return {
       ch: characters,
-      selected: this.value,
+      selected,
     };
   },
 
