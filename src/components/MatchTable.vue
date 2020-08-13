@@ -68,7 +68,7 @@
             @auto-hide="videoClosed"
             :auto-hide="true">
             <v-icon
-              v-if="match.video"
+              v-if="match.video && match.video.length"
               name="youtube"
               v-tooltip.right="'Videos YouTube'"
               class="click text-danger"
