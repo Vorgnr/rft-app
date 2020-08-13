@@ -3,7 +3,7 @@
     <div class="col-md-6 offset-md-3">
       <div class="row">
         <div class="col">
-          <a href="#" @click="$router.go(-1)">
+          <a @click="$router.go(-1)">
             <v-icon name="arrow-left" />Retour
           </a>
           <h1 class="mt-4">Don't ask me for sh$t</h1>

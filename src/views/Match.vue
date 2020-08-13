@@ -2,7 +2,7 @@
   <div v-if="match.match">
     <div class="row mb-3">
       <div class="col">
-        <a href="#" @click="$router.go(-1)">
+        <a @click="$router.go(-1)">
           <v-icon name="arrow-left" />Retour
         </a>
       </div>

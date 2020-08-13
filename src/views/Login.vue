@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <div class="col-md-3 offset-md-3 mt-4">
-        <a href="#" @click="$router.go(-1)">
+        <a @click="$router.go(-1)">
           <v-icon name="arrow-left" />Retour
         </a>
       </div>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a href="#" @click="$router.go(-1)">
+    <a @click="$router.go(-1)">
       <v-icon name="arrow-left" />Retour
     </a>
     <h1 class="mt-2 d-flex">

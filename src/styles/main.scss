@@ -10,7 +10,7 @@
 @import './table.scss';
 
 body {
-  padding-top: 60px;
+  padding-top: 65px;
 }
 
 .main {
@@ -58,5 +58,15 @@ th.borderl {
 }
 
 .jumbotron-small {
-  padding: 1.7em 2em
+  padding: 1.7em 2em;
+}
+
+a:not([href]) {
+  color: #2AA198;
+  cursor: pointer;
+}
+
+a:not([href]):hover {
+  color: #2AA198;
+  text-decoration: underline;
 }
