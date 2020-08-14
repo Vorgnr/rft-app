@@ -5,14 +5,20 @@
       <div class="col">
         <div class="form-group">
           <v-select
-            :options="leagues.map(({ id, name, rank_treshold: rankTreshold }) => (
-              { label: name, code: id, rankTreshold  }
+            :options="leagues.map(({
+              id, name, rank_treshold: rankTreshold, is_active: isActive
+            }) => (
+              { label: name, code: id, rankTreshold, isActive  }
             ))"
             @input="onLeagueChange"
             :value="currentSelectedLeague"
             placeholder="Selectionnez une saison"
             :clearable="false"
           >
+            <template v-slot:option="option">
+              <span v-if="!option.isActive">[Archive]</span>
+              {{ option.label }}
+            </template>
             <template v-slot:no-options="{ search, searching }">
               <template v-if="searching">
                 Aucune saison trouvée pour
@@ -60,16 +66,10 @@
           <td>{{ getRank(elo.value) }}</td>
           <td>
             <router-link tag="a" :to="`/chart/${player.id}`" class="mr-3">
-              <v-icon
-                v-tooltip.right="'Voir les statistiques'"
-                name="bar-chart-2"
-              />
+              <v-icon v-tooltip.right="'Voir les statistiques'" name="bar-chart-2" />
             </router-link>
             <router-link v-if="isAdmin" tag="a" :to="`/players/${player.id}`">
-              <v-icon
-                name="edit"
-                v-tooltip.right="'Editer'"
-              />
+              <v-icon name="edit" v-tooltip.right="'Editer'" />
             </router-link>
           </td>
         </tr>
@@ -196,7 +196,7 @@ export default {
 
     async getLeagues() {
       try {
-        await this.listLeagues();
+        await this.listLeagues({ showAll: true });
       } catch (e) {
         this.notifyError(e);
       }

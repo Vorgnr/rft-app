@@ -15,11 +15,25 @@
       <div class="col">
         <div class="form-group">
           <v-select
-            :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
+            :options="leagues.map(({
+              id, name, is_active: isActive }) => ({ label: name, code: id, isActive }))
+            "
             v-model="currentLeague"
             @input="onLeagueChange"
             placeholder="Filtrer par saison"
-          />
+          >
+            <template v-slot:option="option">
+              <span v-if="!option.isActive">[Archive]</span>
+              {{ option.label }}
+            </template>
+            <template v-slot:no-options="{ search, searching }">
+              <template v-if="searching">
+                Aucune saison trouvée pour
+                <em>{{ search }}</em>.
+              </template>
+              <span v-else>Aucune saison</span>
+            </template>
+          </v-select>
         </div>
       </div>
       <div class="col">
@@ -169,7 +183,7 @@ export default {
 
     async getLeagues() {
       try {
-        await this.listLeagues();
+        await this.listLeagues({ showAll: true });
       } catch (e) {
         this.notifyError(e);
       }

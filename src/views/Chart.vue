@@ -6,12 +6,26 @@
       </div>
       <div class="col mt-2">
         <v-select
-          :options="leagues.map(({ id, name }) => ({ label: name, code: id }))"
+          :options="leagues.map(({ id, name, is_active }) =>
+            ({ label: name, code: id, isActive: is_active}))
+          "
           :value="selectedLeague"
           @input="onSelectedLeagueChanged"
           placeholder="Filtrer par saison"
           :clearable="false"
-        />
+        >
+          <template v-slot:option="option">
+            <span v-if="!option.isActive">[Archive]</span>
+            {{ option.label }}
+          </template>
+          <template v-slot:no-options="{ search, searching }">
+            <template v-if="searching">
+              Aucune saison trouvée pour
+              <em>{{ search }}</em>.
+            </template>
+            <span v-else>Aucune saison</span>
+          </template>
+        </v-select>
       </div>
     </div>
     <player-stats class="mt-3" v-bind="playerStats" :elo="playerElo" />
@@ -35,18 +49,14 @@
 
     <div v-if="matches.length" class="row">
       <div v-if="player.main_character" class="col">
-        <h3 class="mt-4">
-          Mes personnages
-        </h3>
+        <h3 class="mt-4">Mes personnages</h3>
         <doughnut-chart
           :options="characterChartOptions(charactersStats)"
           :chart-data="characterChartData(charactersStats)"
         />
       </div>
       <div class="col">
-        <h3 class="mt-4">
-          Personnages de mes adversaires
-        </h3>
+        <h3 class="mt-4">Personnages de mes adversaires</h3>
         <doughnut-chart
           :options="characterChartOptions(oponentCharactersStats)"
           :chart-data="characterChartData(oponentCharactersStats)"
@@ -145,14 +155,20 @@ export default {
               const names = Object.keys(stats);
               const { win, total } = stats[names[index]];
               const winLabel = this.$options.filters.pluralize('victoire', win);
-              const matchLabel = this.$options.filters.pluralize('match', total);
+              const matchLabel = this.$options.filters.pluralize(
+                'match',
+                total,
+              );
               return ` ${win} ${winLabel} sur ${total} ${matchLabel}`;
             },
             afterLabel: (item) => {
               const { index } = item;
               const names = Object.keys(stats);
               const { win, total } = stats[names[index]];
-              return `Taux de victoire: ${this.$options.filters.percent(win, total)} %`;
+              return `Taux de victoire: ${this.$options.filters.percent(
+                win,
+                total,
+              )} %`;
             },
           },
         },
@@ -195,8 +211,14 @@ export default {
                 index
               ];
               const winLabel = this.$options.filters.pluralize('victoire', win);
-              const looseLabel = this.$options.filters.pluralize('défaite', loose);
-              const matchLabel = this.$options.filters.pluralize('match', total);
+              const looseLabel = this.$options.filters.pluralize(
+                'défaite',
+                loose,
+              );
+              const matchLabel = this.$options.filters.pluralize(
+                'match',
+                total,
+              );
               return datasetIndex === 0
                 ? `${win} ${winLabel} / ${total} ${matchLabel}`
                 : `${loose} ${looseLabel} / ${total} ${matchLabel}`;
@@ -408,18 +430,20 @@ export default {
         const colors = charactersName.map((n) => this.$options.filters.stringToColour(n));
         return {
           labels: charactersName.map((c) => this.$options.filters.capitalize(c)),
-          datasets: [{
-            borderColor: colors,
-            backgroundColor: colors.map((h) => {
-              const { r, g, b } = this.$options.filters.hexToRgb(h);
-              return `rgba(${r}, ${g}, ${b}, 0.4)`;
-            }),
-            data: charactersName.map((n) => {
-              const { total } = stats[n];
+          datasets: [
+            {
+              borderColor: colors,
+              backgroundColor: colors.map((h) => {
+                const { r, g, b } = this.$options.filters.hexToRgb(h);
+                return `rgba(${r}, ${g}, ${b}, 0.4)`;
+              }),
+              data: charactersName.map((n) => {
+                const { total } = stats[n];
 
-              return total;
-            }),
-          }],
+                return total;
+              }),
+            },
+          ],
         };
       };
     },
@@ -554,7 +578,7 @@ export default {
 
     async getLeagues() {
       try {
-        await this.listLeagues();
+        await this.listLeagues({ showAll: true });
         this.selectedLeague = this.currentSelectedLeague;
       } catch (e) {
         this.notifyError(e);
