@@ -4,7 +4,7 @@ const mutations = {
   setList(s, list) {
     s.list = list;
     const [currentLeague] = list;
-    if (currentLeague) {
+    if (currentLeague && !s.currentSelectedLeague) {
       s.currentSelectedLeague = {
         code: currentLeague.id,
         label: currentLeague.name,
@@ -28,6 +28,7 @@ const mutations = {
   },
 
   setCurrentLeague(s, selectedLeague) {
+    localStorage.currentSelectedLeague = JSON.stringify(selectedLeague);
     s.currentSelectedLeague = selectedLeague;
   },
 };
@@ -80,7 +81,8 @@ export default {
   state: {
     isLazy: false,
     list: [],
-    currentSelectedLeague: null,
+    currentSelectedLeague: localStorage.currentSelectedLeague
+      && JSON.parse(localStorage.currentSelectedLeague),
   },
   getters,
 };

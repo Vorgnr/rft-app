@@ -5,27 +5,11 @@
         <h1>{{ title }}</h1>
       </div>
       <div class="col mt-2">
-        <v-select
-          :options="leagues.map(({ id, name, is_active }) =>
-            ({ label: name, code: id, isActive: is_active}))
-          "
-          :value="selectedLeague"
+        <league-select
+          :leagues="leagues"
           @input="onSelectedLeagueChanged"
-          placeholder="Filtrer par saison"
-          :clearable="false"
-        >
-          <template v-slot:option="option">
-            <span v-if="!option.isActive">[Archive]</span>
-            {{ option.label }}
-          </template>
-          <template v-slot:no-options="{ search, searching }">
-            <template v-if="searching">
-              Aucune saison trouvée pour
-              <em>{{ search }}</em>.
-            </template>
-            <span v-else>Aucune saison</span>
-          </template>
-        </v-select>
+          :value="currentSelectedLeague"
+        />
       </div>
     </div>
     <player-stats class="mt-3" v-bind="playerStats" :elo="playerElo" />
@@ -69,7 +53,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import formatISO from 'date-fns/formatISO';
-import vSelect from 'vue-select';
+import LeagueSelect from '@/components/LeagueSelect.vue';
 import LineChart from '@/components/LineChart.vue';
 import BarChart from '@/components/BarChart.vue';
 import DoughnutChart from '@/components/DoughnutChart.vue';
@@ -83,7 +67,7 @@ export default {
   name: 'Matches',
   title: 'Matchs',
   components: {
-    vSelect,
+    LeagueSelect,
     LineChart,
     PlayerStats,
     BarChart,
@@ -517,6 +501,7 @@ export default {
     }),
     ...mapActions('leagues', {
       listLeagues: 'list',
+      setCurrentLeague: 'setCurrentLeague',
     }),
     ...mapActions('matches', {
       listMatches: 'list',
@@ -549,7 +534,7 @@ export default {
     },
 
     async onSelectedLeagueChanged(league) {
-      this.selectedLeague = league;
+      this.setCurrentLeague(league);
       await this.getMatches();
     },
 
@@ -566,7 +551,7 @@ export default {
 
     async getMatches(params = {}) {
       const payload = params;
-      payload.leagueId = this.selectedLeague.code;
+      payload.leagueId = this.currentSelectedLeague.code;
       payload.name = this.player.name;
       payload.orderBy = 'completed_at';
       try {
@@ -579,7 +564,6 @@ export default {
     async getLeagues() {
       try {
         await this.listLeagues({ showAll: true });
-        this.selectedLeague = this.currentSelectedLeague;
       } catch (e) {
         this.notifyError(e);
       }

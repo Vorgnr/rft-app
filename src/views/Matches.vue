@@ -13,28 +13,11 @@
         </div>
       </div>
       <div class="col">
-        <div class="form-group">
-          <v-select
-            :options="leagues.map(({
-              id, name, is_active: isActive }) => ({ label: name, code: id, isActive }))
-            "
-            v-model="currentLeague"
-            @input="onLeagueChange"
-            placeholder="Filtrer par saison"
-          >
-            <template v-slot:option="option">
-              <span v-if="!option.isActive">[Archive]</span>
-              {{ option.label }}
-            </template>
-            <template v-slot:no-options="{ search, searching }">
-              <template v-if="searching">
-                Aucune saison trouvée pour
-                <em>{{ search }}</em>.
-              </template>
-              <span v-else>Aucune saison</span>
-            </template>
-          </v-select>
-        </div>
+        <league-select
+          :leagues="leagues"
+          @input="onLeagueChange"
+          :value="currentSelectedLeague"
+        />
       </div>
       <div class="col">
         <div class="form-group">
@@ -66,18 +49,18 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import vSelect from 'vue-select';
+import LeagueSelect from '../components/LeagueSelect.vue';
 import MatchTable from '../components/MatchTable.vue';
 
 export default {
   name: 'Matches',
   title: 'Matchs',
-  components: { vSelect, MatchTable },
+  components: { LeagueSelect, MatchTable, vSelect },
 
   data() {
     return {
       perPage: 30,
       page: 1,
-      currentLeague: null,
       matchStatus: null,
       search: null,
     };
@@ -86,6 +69,7 @@ export default {
   computed: {
     ...mapGetters('leagues', {
       leagues: 'list',
+      currentSelectedLeague: 'currentSelectedLeague',
     }),
     ...mapGetters('matches', {
       matches: 'list',
@@ -99,6 +83,7 @@ export default {
   methods: {
     ...mapActions('leagues', {
       listLeagues: 'list',
+      setCurrentLeague: 'setCurrentLeague',
     }),
     ...mapActions('matches', {
       fetchMoreMatches: 'fetchMore',
@@ -119,7 +104,8 @@ export default {
       }, 600);
     },
 
-    onLeagueChange() {
+    onLeagueChange(option) {
+      this.setCurrentLeague(option);
       this.getMatches();
     },
 
@@ -142,8 +128,8 @@ export default {
         perPage: this.perPage,
         page: this.page + 1,
       };
-      if (this.currentLeague) {
-        payload.leagueId = this.currentLeague.code;
+      if (this.currentSelectedLeague) {
+        payload.leagueId = this.currentSelectedLeague.code;
       }
       if (this.matchStatus) {
         this.matchStatus.forEach((s) => {
@@ -166,8 +152,8 @@ export default {
       if (!params.name && this.search) {
         payload.name = this.search;
       }
-      if (!payload.leagueId && this.currentLeague) {
-        payload.leagueId = this.currentLeague.code;
+      if (!payload.leagueId && this.currentSelectedLeague) {
+        payload.leagueId = this.currentSelectedLeague.code;
       }
       if (this.matchStatus) {
         this.matchStatus.forEach((s) => {

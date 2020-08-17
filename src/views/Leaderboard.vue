@@ -3,31 +3,11 @@
     <h1>Leaderboard</h1>
     <div class="row">
       <div class="col">
-        <div class="form-group">
-          <v-select
-            :options="leagues.map(({
-              id, name, rank_treshold: rankTreshold, is_active: isActive
-            }) => (
-              { label: name, code: id, rankTreshold, isActive  }
-            ))"
-            @input="onLeagueChange"
-            :value="currentSelectedLeague"
-            placeholder="Selectionnez une saison"
-            :clearable="false"
-          >
-            <template v-slot:option="option">
-              <span v-if="!option.isActive">[Archive]</span>
-              {{ option.label }}
-            </template>
-            <template v-slot:no-options="{ search, searching }">
-              <template v-if="searching">
-                Aucune saison trouvée pour
-                <em>{{ search }}</em>.
-              </template>
-              <span v-else>Aucune saison</span>
-            </template>
-          </v-select>
-        </div>
+        <league-select
+          :leagues="leagues"
+          @input="onLeagueChange"
+          :value="currentSelectedLeague"
+        />
       </div>
       <div class="col">
         <div class="form-group">
@@ -86,13 +66,16 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import vSelect from 'vue-select';
 import CharacterThumbnail from '../components/CharacterThumbnail.vue';
+import LeagueSelect from '../components/LeagueSelect.vue';
 
 export default {
   name: 'Leaderboard',
   title: 'Leaderboard',
-  components: { vSelect, CharacterThumbnail },
+  components: {
+    CharacterThumbnail,
+    LeagueSelect,
+  },
 
   data() {
     return {
