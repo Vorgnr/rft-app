@@ -4,20 +4,23 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <input
-            v-model="search"
-            @input="debounceSearch"
-            class="form-control"
-            placeholder="Rechercher par pseudo..."
-          />
+          <div class="input-group">
+            <input
+              v-model="search"
+              @input="debounceSearch"
+              class="form-control"
+              placeholder="Rechercher par pseudo..."
+            />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" @click="clearSearch">
+                <v-icon name="x" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col">
-        <league-select
-          :leagues="leagues"
-          @input="onLeagueChange"
-          :value="currentSelectedLeague"
-        />
+        <league-select :leagues="leagues" @input="onLeagueChange" :value="currentSelectedLeague" />
       </div>
       <div class="col">
         <div class="form-group">
@@ -104,21 +107,27 @@ export default {
       }, 600);
     },
 
+    clearSearch() {
+      this.search = null;
+      this.getMatches();
+    },
+
     onLeagueChange(option) {
       this.setCurrentLeague(option);
       this.getMatches();
     },
 
     onStatusChange() {
-      this.matchStatus = this.matchStatus
-        .reverse()
-        .reduce((acc, filter) => {
+      this.matchStatus = this.matchStatus.reverse().reduce(
+        (acc, filter) => {
           acc.code[filter.code] += 1;
           if (acc.code[filter.code] < 2) {
             acc.filters.push(filter);
           }
           return acc;
-        }, { code: { moderatedAt: 0, completedAt: 0 }, filters: [] }).filters;
+        },
+        { code: { moderatedAt: 0, completedAt: 0 }, filters: [] },
+      ).filters;
       this.getMatches();
     },
 

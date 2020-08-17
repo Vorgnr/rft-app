@@ -3,20 +3,23 @@
     <h1>Leaderboard</h1>
     <div class="row">
       <div class="col">
-        <league-select
-          :leagues="leagues"
-          @input="onLeagueChange"
-          :value="currentSelectedLeague"
-        />
+        <league-select :leagues="leagues" @input="onLeagueChange" :value="currentSelectedLeague" />
       </div>
       <div class="col">
         <div class="form-group">
-          <input
-            v-model="search"
-            @input="debounceSearch"
-            class="form-control"
-            placeholder="Rechercher par pseudo..."
-          />
+          <div class="input-group">
+            <input
+              v-model="search"
+              @input="debounceSearch"
+              class="form-control"
+              placeholder="Rechercher par pseudo..."
+            />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" @click="clearSearch">
+                <v-icon name="x" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -131,24 +134,26 @@ export default {
       clearTimeout(this.debounce);
       this.debounce = setTimeout(() => {
         this.message = event.target.value;
-        this.getPlayers({
-          leagueId: this.currentSelectedLeague.code,
-          name: this.search,
-        });
+        this.getPlayers();
       }, 600);
+    },
+
+    clearSearch() {
+      this.search = null;
+      this.getPlayers();
     },
 
     onLeagueChange(option) {
       this.setCurrentLeague(option);
-      this.getPlayers({ leagueId: option.code, name: this.search });
+      this.getPlayers({ leagueId: option.code });
     },
 
-    async getPlayers({ leagueId, name }) {
+    async getPlayers({ leagueId, name } = {}) {
       try {
         await this.listPlayers({
           params: {
-            leagueId,
-            name,
+            leagueId: leagueId || this.currentSelectedLeague.code,
+            name: name || this.search,
             withElo: 1,
             page: 1,
             perPage: this.perPage,
@@ -189,7 +194,7 @@ export default {
   async created() {
     this.loading = true;
     await this.getLeagues();
-    await this.getPlayers({ leagueId: this.currentSelectedLeague.code });
+    await this.getPlayers();
     this.loading = false;
   },
 };
