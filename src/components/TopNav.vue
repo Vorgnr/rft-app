@@ -22,34 +22,34 @@
       <div :class="collapsed ? '' : 'show'" class="collapse navbar-collapse" id="mainNavbar">
         <ul class="navbar-nav  mr-auto">
           <router-link tag="li" class="nav-item" to="/matches">
-            <a class="nav-link">Matchs</a>
+            <a @click="collapsed = true" class="nav-link">Matchs</a>
           </router-link>
           <router-link v-if="isAuth" tag="li" class="nav-item" to="/matches/new">
-            <a class="nav-link">Nouveau match</a>
+            <a @click="collapsed = true" class="nav-link">Nouveau match</a>
           </router-link>
           <router-link v-if="isAdmin" tag="li" class="nav-item" to="/admin/leagues">
-            <a class="nav-link">Saisons</a>
+            <a @click="collapsed = true" class="nav-link">Saisons</a>
           </router-link>
         </ul>
         <ul class="navbar-nav">
           <router-link v-if="isAuth" tag="li" class="nav-item" to="/profile">
-            <a class="nav-link">
+            <a @click="collapsed = true" class="nav-link">
               <v-icon name="user" />
             </a>
           </router-link>
           <router-link v-if="isAuth" tag="li" class="nav-item" to="/my-chart">
-            <a class="nav-link">
+            <a @click="collapsed = true" class="nav-link">
               <v-icon name="bar-chart-2" />
             </a>
           </router-link>
           <router-link v-if="!isAuth" tag="li" class="nav-item" to="/inscription">
-            <a class="nav-link">Inscription</a>
+            <a @click="collapsed = true" class="nav-link">Inscription</a>
           </router-link>
           <router-link v-if="!isAuth" tag="li" class="nav-item" to="/login">
-            <a class="nav-link">Login</a>
+            <a @click="collapsed = true" class="nav-link">Login</a>
           </router-link>
           <li v-if="isAuth" @click="$emit('signout')" class="nav-item">
-            <a class="nav-link">Logout</a>
+            <a @click="collapsed = true" class="nav-link">Logout</a>
           </li>
         </ul>
       </div>
