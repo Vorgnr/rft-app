@@ -23,48 +23,53 @@
         </div>
       </div>
     </div>
-    <table v-if="!loading" class="table table-hover">
-      <thead>
-        <tr>
-          <th>Pos</th>
-          <th>Char</th>
-          <th>Pseudo</th>
-          <th>Matchs</th>
-          <th>Points</th>
-          <th>Palier</th>
-          <th v-if="isAuth"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="({ player, elo }, index) in players" :key="player.id">
-          <td>
-            <span v-if="elo.value !== null">{{index+1}}</span>
-          </td>
-          <td class="character-thumbnail">
-            <character-thumbnail :characters="player.main_character" />
-          </td>
-          <td>{{player.name}}</td>
-          <td>{{ elo.played_matches }}</td>
-          <td>{{ elo.value }}</td>
-          <td>{{ getRank(elo.value) }}</td>
-          <td>
-            <router-link tag="a" :to="`/chart/${player.id}`" class="mr-3">
-              <v-icon v-tooltip.right="'Voir les statistiques'" name="bar-chart-2" />
-            </router-link>
-            <router-link v-if="isAdmin" tag="a" :to="`/players/${player.id}`">
-              <v-icon name="edit" v-tooltip.right="'Editer'" />
-            </router-link>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button
-      v-if="!noMorePlayers"
-      @click="getMorePlayers"
-      type="button"
-      class="btn btn-outline-primary btn-lg btn-block"
-    >Voir plus</button>
-  </div>
+    <div class="row">
+      <div class="col">
+        <table v-if="!loading" class="table table-hover table-condensed">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Char</th>
+              <th>Pseudo</th>
+              <th>Matchs</th>
+              <th>Points</th>
+              <th>Palier</th>
+              <th v-if="isAuth"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="({ player, elo }, index) in players" :key="player.id">
+              <td>
+                <span v-if="elo.value !== null">{{index+1}}</span>
+              </td>
+              <td class="character-thumbnail">
+                <character-thumbnail :characters="player.main_character" />
+              </td>
+              <td>{{player.name}}</td>
+              <td>{{ elo.played_matches }}</td>
+              <td>{{ elo.value }}</td>
+              <td>{{ getRank(elo.value) }}</td>
+              <td>
+                <router-link tag="a" :to="`/chart/${player.id}`" class="mr-3">
+                  <v-icon v-tooltip.right="'Voir les statistiques'" name="bar-chart-2" />
+                </router-link>
+                <router-link v-if="isAdmin" tag="a" :to="`/players/${player.id}`">
+                  <v-icon name="edit" v-tooltip.right="'Editer'" />
+                </router-link>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button
+          v-if="!noMorePlayers"
+          @click="getMorePlayers"
+          type="button"
+          class="btn btn-outline-primary btn-lg btn-block"
+        >Voir plus</button>
+      </div>
+
+      </div>
+    </div>
 </template>
 
 <script>

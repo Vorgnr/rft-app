@@ -5,6 +5,12 @@
   background-position: -8px -8px;
 }
 
+@media (max-width: 576px) {
+  .characters {
+    background-position: -14px -8px;
+  }
+}
+
 .table {
   td.character-thumbnail {
     padding: 0;

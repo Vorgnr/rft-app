@@ -2,7 +2,7 @@
   <div>
     <h1>Matchs</h1>
     <div class="row">
-      <div class="col">
+      <div class="col-12 col-md-4">
         <div class="form-group">
           <div class="input-group">
             <input
@@ -19,10 +19,10 @@
           </div>
         </div>
       </div>
-      <div class="col">
+      <div class="col-12 col-md-4">
         <league-select :leagues="leagues" @input="onLeagueChange" :value="currentSelectedLeague" />
       </div>
-      <div class="col">
+      <div class="col-12 col-md-4">
         <div class="form-group">
           <v-select
             :options="[
@@ -39,13 +39,21 @@
         </div>
       </div>
     </div>
-    <match-table :matches="matches" @open="open" :is-auth="isAuth" />
-    <button
-      v-if="!noMoreMatches"
-      @click="getMoreMatches"
-      type="button"
-      class="btn btn-outline-primary btn-lg btn-block"
-    >Voir plus</button>
+    <div class="row">
+      <div class="col">
+        <match-table :matches="matches" @open="open" :is-auth="isAuth" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button
+          v-if="!noMoreMatches"
+          @click="getMoreMatches"
+          type="button"
+          class="btn btn-outline-primary btn-lg btn-block"
+        >Voir plus</button>
+      </div>
+    </div>
   </div>
 </template>
 
