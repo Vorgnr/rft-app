@@ -2,10 +2,10 @@
   <div>
     <h1>Leaderboard</h1>
     <div class="row">
-      <div class="col">
+      <div class="col-12 col-md-6">
         <league-select :leagues="leagues" @input="onLeagueChange" :value="currentSelectedLeague" />
       </div>
-      <div class="col">
+      <div class="col-12 col-md-6">
         <div class="form-group">
           <div class="input-group">
             <input
