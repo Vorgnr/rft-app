@@ -9,7 +9,7 @@
     "deploy": "aws s3 sync ./dist s3://ranking-tekken.fr"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
     "date-fns": "^2.14.0",
