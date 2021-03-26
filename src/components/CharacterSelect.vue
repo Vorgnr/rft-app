@@ -53,6 +53,7 @@ const characters = [
   'lei',
   'leo',
   'leroy',
+  'lidia',
   'lili',
   'lucky',
   'marduk',
